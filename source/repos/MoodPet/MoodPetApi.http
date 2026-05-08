@@ -1,0 +1,6 @@
+@MoodPetApi_HostAddress = http://localhost:5157
+
+GET {{MoodPetApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
