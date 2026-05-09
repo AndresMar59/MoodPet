@@ -41,7 +41,7 @@ namespace MoodPet.Domain.Entities
         public int RazaId { get; set; }
 
         //Navegación
-        public ICollection<Eventocalendario> Eventos { get; set; } = new List<Eventocalendario>();
+        public ICollection<EventoCalendario> Eventos { get; set; } = new List<EventoCalendario>();
         public ICollection<TareaDiaria> Tareas { get; set; } = new List<TareaDiaria>();
     }
 }

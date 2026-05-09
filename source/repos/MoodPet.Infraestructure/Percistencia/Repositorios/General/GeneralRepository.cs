@@ -41,6 +41,17 @@ namespace MoodPet.Infraestructure.Percistencia.Repositorios.General
             return result >= 1; ;
         }
 
+        public virtual async Task<TEntity> UpdateAsync(TEntity entity)
+        {
+            _context.Set<TEntity>().Update(entity);
+            var result = await _context.SaveChangesAsync();
+            if (result == 0)
+            {
+                return null;
+            }
+            return entity;
+        }
+
         public virtual async Task<TEntity?> FindAsync(int id)
         {
             return await _context.Set<TEntity>().FirstOrDefaultAsync(e => e.Id == id);

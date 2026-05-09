@@ -12,7 +12,7 @@ using MoodPet.Infraestructure.Percistencia;
 namespace MoodPet.Infraestructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260509072228_init")]
+    [Migration("20260509091048_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -181,7 +181,7 @@ namespace MoodPet.Infraestructure.Migrations
                     b.ToTable("Especies");
                 });
 
-            modelBuilder.Entity("MoodPet.Domain.Entities.Eventocalendario", b =>
+            modelBuilder.Entity("MoodPet.Domain.Entities.EventoCalendario", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -545,9 +545,9 @@ namespace MoodPet.Infraestructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MoodPet.Domain.Entities.Eventocalendario", b =>
+            modelBuilder.Entity("MoodPet.Domain.Entities.EventoCalendario", b =>
                 {
-                    b.HasOne("MoodPet.Domain.Entities.Mascota", "mascota")
+                    b.HasOne("MoodPet.Domain.Entities.Mascota", "Mascota")
                         .WithMany("Eventos")
                         .HasForeignKey("MascotaId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -565,9 +565,9 @@ namespace MoodPet.Infraestructure.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("TipoEvento");
+                    b.Navigation("Mascota");
 
-                    b.Navigation("mascota");
+                    b.Navigation("TipoEvento");
                 });
 
             modelBuilder.Entity("MoodPet.Domain.Entities.HistorialTarea", b =>

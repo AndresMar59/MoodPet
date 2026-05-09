@@ -16,7 +16,7 @@ namespace MoodPet.Infraestructure.Percistencia
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         { }
 
-       public DbSet<Eventocalendario> EventosCalendario { get; set; }
+       public DbSet<EventoCalendario> EventosCalendario { get; set; }
 
        public DbSet<Mascota> Mascotas { get; set; } 
 
@@ -41,11 +41,11 @@ namespace MoodPet.Infraestructure.Percistencia
             // Mascota 1 - N Evento_Calendario
             // TipoEvento 1 - N Evento_Calendario
             // User 1 - N Evento_Calendario
-            modelBuilder.Entity<Eventocalendario>(entity =>
+            modelBuilder.Entity<EventoCalendario>(entity =>
             {
                 entity.HasKey(e => e.Id); // Llave primaria
 
-                entity.HasOne(e => e.mascota)             // Un evento tiene una mascota
+                entity.HasOne(e => e.Mascota)             // Un evento tiene una mascota
                     .WithMany(e => e.Eventos)             // Una mascota puede tener muchos eventos (puedes poner .WithMany(m => m.Eventos) si agregas la colección en Mascota)
                     .HasForeignKey(e => e.MascotaId)      // Clave foránea en Eventocalendario
                     .OnDelete(DeleteBehavior.Cascade); // Si se borra la mascota, se borran sus eventos

@@ -13,6 +13,8 @@ namespace MoodPet.Domain.Interfaces.General
     
         Task<TEntity> AddAsync(TEntity entity);
 
+        Task<TEntity> UpdateAsync(TEntity entity);
+
         Task<TEntity?> FindAsync(int id);
 
         Task<bool> Delete(int id);

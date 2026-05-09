@@ -14,6 +14,6 @@ namespace MoodPet.Infraestructure.Identity
 
         public ICollection<Mascota> Mascotas { get; set; } = new List<Mascota>();
         public ICollection<TareaDiaria> TareaDiarias { get; set; } = new List<TareaDiaria>();
-        public ICollection<Eventocalendario> Eventos { get; set; } = new List<Eventocalendario>();
+        public ICollection<EventoCalendario> Eventos { get; set; } = new List<EventoCalendario>();
     }
 }

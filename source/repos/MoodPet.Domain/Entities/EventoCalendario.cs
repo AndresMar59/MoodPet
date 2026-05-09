@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MoodPet.Domain.Entities
 {
-    public class Eventocalendario : GeneralEntity
+    public class EventoCalendario : GeneralEntity
     {
         public string titulo { get; set; } 
 
@@ -20,7 +20,7 @@ namespace MoodPet.Domain.Entities
         
         //Fk Mascota
         public int MascotaId { get; set; } 
-        public Mascota mascota { get; set; } // Relacion con Mascotas (Lleva CRUD)
+        public Mascota Mascota { get; set; } // Relacion con Mascotas (Lleva CRUD)
 
         //Fk Usuario
         public string UserId { get; set; }

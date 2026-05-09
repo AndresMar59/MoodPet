@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 using MoodPet.Application.Service;
 using MoodPet.Domain.Interfaces;
+using MoodPet.Domain.Interfaces.Repositorio;
 using MoodPet.Infraestructure.Identity;
 using MoodPet.Infraestructure.Percistencia;
 using MoodPet.Infraestructure.Percistencia.Repositorios;
@@ -19,7 +20,7 @@ builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<Auth>();
 builder.Services.AddScoped<IJwtService, JwtService>();
-//builder.Services.AddScoped<IEventoCalendarioRepository, EventoCalendarioRepository>();
+builder.Services.AddScoped<IEventoCalendarioRepository, EventoCalendarioRepository>();
 //builder.Services.AddScoped<>();
 
 

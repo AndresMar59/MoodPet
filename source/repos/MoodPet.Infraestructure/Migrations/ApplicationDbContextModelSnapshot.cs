@@ -178,7 +178,7 @@ namespace MoodPet.Infraestructure.Migrations
                     b.ToTable("Especies");
                 });
 
-            modelBuilder.Entity("MoodPet.Domain.Entities.Eventocalendario", b =>
+            modelBuilder.Entity("MoodPet.Domain.Entities.EventoCalendario", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -542,9 +542,9 @@ namespace MoodPet.Infraestructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MoodPet.Domain.Entities.Eventocalendario", b =>
+            modelBuilder.Entity("MoodPet.Domain.Entities.EventoCalendario", b =>
                 {
-                    b.HasOne("MoodPet.Domain.Entities.Mascota", "mascota")
+                    b.HasOne("MoodPet.Domain.Entities.Mascota", "Mascota")
                         .WithMany("Eventos")
                         .HasForeignKey("MascotaId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -562,9 +562,9 @@ namespace MoodPet.Infraestructure.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("TipoEvento");
+                    b.Navigation("Mascota");
 
-                    b.Navigation("mascota");
+                    b.Navigation("TipoEvento");
                 });
 
             modelBuilder.Entity("MoodPet.Domain.Entities.HistorialTarea", b =>
