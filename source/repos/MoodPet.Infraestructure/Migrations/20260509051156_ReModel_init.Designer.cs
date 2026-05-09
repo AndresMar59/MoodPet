@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MoodPet.Infraestructure.Percistencia;
 
@@ -11,9 +12,11 @@ using MoodPet.Infraestructure.Percistencia;
 namespace MoodPet.Infraestructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260509051156_ReModel_init")]
+    partial class ReModel_init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -237,14 +240,8 @@ namespace MoodPet.Infraestructure.Migrations
                     b.Property<bool>("Completada")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("Eliminada")
-                        .HasColumnType("bit");
-
-                    b.Property<DateOnly>("Fecha")
-                        .HasColumnType("date");
-
-                    b.Property<TimeOnly>("Hora")
-                        .HasColumnType("time");
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("TareaId")
                         .HasColumnType("int");
@@ -263,6 +260,9 @@ namespace MoodPet.Infraestructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Edad")
+                        .HasColumnType("int");
 
                     b.Property<DateOnly>("FechaNacimiento")
                         .HasColumnType("date");

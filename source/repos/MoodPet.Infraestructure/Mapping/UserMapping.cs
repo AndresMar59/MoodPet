@@ -12,28 +12,28 @@ namespace MoodPet.Infraestructure.Mapping
 
         public static AppIdentityUser ToIdentityUser(this Usuario usuario)
         {
-            if (usuario == null) return null;
-
             return new AppIdentityUser
             {
-
-                UserName = usuario.name,
-                Email = usuario.email,
-                PhoneNumber = usuario.tel
+                //sin id, ya que se genera automáticamente al crear el usuario en la base de datos
+                Firstname = usuario.FirstName,
+                Lastname = usuario.LastName,
+                UserName = usuario.Email,
+                Email = usuario.Email,
+                PhoneNumber = usuario.Tel
             };
         }
 
         public static Usuario ToDomainUser(this AppIdentityUser identityUser)
         {
-            if (identityUser == null) return null;
-
+            if (identityUser == null)
+                return null;
             return new Usuario
             {
-                id = Guid.TryParse(identityUser.Id, out var guidId) ? guidId : Guid.Empty,
-                email = identityUser.Email,
-                tel = identityUser.PhoneNumber,
-                name = identityUser.UserName ?? "Sin nombre",
-                lastname = ""
+                Id = Guid.Parse(identityUser.Id),
+                Email = identityUser.Email,
+                Tel = identityUser.PhoneNumber,
+                FirstName = identityUser.Firstname,
+                LastName = identityUser.Lastname
             };
         }
     }

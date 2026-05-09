@@ -24,6 +24,7 @@ namespace MoodPet.Domain.Entities
 
         public TimeOnly Hora { get; set; } // Hora en la que se hace la tarea
 
+        //FK Mascota
         public int MascotaId { get; set; }
 
         public Mascota Mascota { get; set; } 

@@ -1,12 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MoodPetApi.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize(Roles = "Admin")]
     public class EventosCalendarioController : Controller
     {
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            return Ok(new { message = "Eventos del calendarioxd" });
         }
     }
 }
