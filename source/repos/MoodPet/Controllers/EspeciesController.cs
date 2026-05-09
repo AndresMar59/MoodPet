@@ -54,7 +54,7 @@ namespace MoodPetApi.Controllers
                     species.Id,
                     species.Nombre,
 
-                    razas = species.Razas.Select(r => new
+                    razas = species.Razas.Where(r => !r.IsDeleted).Select(r => new
                     {
                         r.Id,
                         r.Nombre
