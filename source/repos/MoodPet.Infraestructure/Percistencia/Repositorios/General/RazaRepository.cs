@@ -11,5 +11,6 @@ namespace MoodPet.Infraestructure.Percistencia.Repositorios.General
         public RazaRepository(ApplicationDbContext context) : base(context)
         {
         }
+
     }
 }

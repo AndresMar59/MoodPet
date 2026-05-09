@@ -25,6 +25,8 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IEventoCalendarioRepository, EventoCalendarioRepository>();
 builder.Services.AddScoped<IEspecieRepository, EspecieRepository>();
 builder.Services.AddScoped<EspecieService>();
+builder.Services.AddScoped<IRazaRepository, RazaRepository>();
+builder.Services.AddScoped<RazaService>();
 //builder.Services.AddScoped<>();
 
 

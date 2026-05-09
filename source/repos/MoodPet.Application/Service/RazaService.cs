@@ -32,6 +32,28 @@ namespace MoodPet.Application.Service
             return raza; // Te devuelve un objeto tipo raza (No se si es necesario pasarlo a string)
         }
 
+        //Encuentra una raza por su id, pero solo si no esta eliminada, ademas de incluir la especie a la que pertenece
+        public async Task<Raza> FindByIdAsync(int razaId)
+        {
+            var raza = await _raza.FindFirstOrDefaultAsync(r => r.Id == razaId && !r.IsDeleted, r => r.Especie);
+            if (raza == null)
+            {
+                throw new ArgumentException($"No se encontro la raza con el id {razaId}");
+            }
+            return raza;
+        }
+
+        public async Task<string> UpdateRazaAsync(Raza valor) // La validacion del tipo de entrada deberia ser en la terminal
+        {
+            var Id_raza = valor.Id;
+            var existe = await _raza.FindAsync(Id_raza);
+            if (existe != null)
+            {
+                var result = await _raza.UpdateAsync(valor);
+                return $"Actualizacion de la raza con id {Id_raza} completada";
+            }
+            return $"Raza con id: {Id_raza} no existe";
+        }
         public async Task<string> DeleteById(int id) // La validacion del tipo de entrada deberia ser en la terminal
         {
             var raza = await _raza.Delete(id);
@@ -43,7 +65,7 @@ namespace MoodPet.Application.Service
         }
 
 
-        public async Task<string> CreateAsync(Raza valor) // La validacion del tipo de entrada deberia ser en la terminal
+        public async Task<string> CreateRazaAsync(Raza valor) // La validacion del tipo de entrada deberia ser en la terminal
         {
             var especie = await _especie.FindAsync(valor.EspecieId);
             if (especie == null)
@@ -54,8 +76,8 @@ namespace MoodPet.Application.Service
             var existe = await _raza.FindAsync(Id_raza);
             if (existe == null)
             {
-                await _raza.AddAsync(valor);
-                return $"Creacion de la raza con id {Id_raza} completada";
+                var newraza = await _raza.AddAsync(valor);
+                return $"Creacion de la raza con id {newraza.Id} completada";
             }
             return $"Raza con id: {Id_raza} ya existe";
         }

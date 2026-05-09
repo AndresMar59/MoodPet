@@ -14,7 +14,7 @@ namespace MoodPet.Infraestructure.Percistencia.Repositorios.General
         {
         }
 
-        public async override Task<Especie> FindAsync(int speciesId)
+        public async Task<Especie> FindAsync(int speciesId)
         {
             return await _context.Especies
                 .Include(e => e.Razas)      // Incluye las razas relacionadas

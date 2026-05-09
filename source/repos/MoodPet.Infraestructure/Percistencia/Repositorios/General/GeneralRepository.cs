@@ -52,9 +52,22 @@ namespace MoodPet.Infraestructure.Percistencia.Repositorios.General
             return entity;
         }
 
-        public virtual async Task<TEntity> FindAsync(int id)
+        public virtual async Task<IQueryable<TEntity>> FindWhere(Expression<Func<TEntity, bool>> predicate)
         {
-            return await _context.Set<TEntity>().FirstOrDefaultAsync(e => e.Id == id);
+            return _context.Set<TEntity>().Where(predicate).AsQueryable();
+        }
+
+        public virtual async Task<TEntity?> FindFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes)
+        {
+            IQueryable<TEntity> query = _context.Set<TEntity>();
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await query.FirstOrDefaultAsync(predicate);
+
         }
 
         public virtual async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate = null)
@@ -67,6 +80,11 @@ namespace MoodPet.Infraestructure.Percistencia.Repositorios.General
             }
 
             return await query.ToListAsync();
+        }
+
+        public virtual async Task<TEntity> FindAsync(int id)
+        {
+            return await _context.Set<TEntity>().FirstOrDefaultAsync(e => e.Id == id);
         }
     }
 }
