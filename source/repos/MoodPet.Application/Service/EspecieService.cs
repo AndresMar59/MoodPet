@@ -41,15 +41,27 @@ namespace MoodPet.Application.Service
             return $"Eliminacion de la especie con id {id} completada";
         }
 
+        public async Task<string> UpdateEspecieAsync(Especie valor) // La validacion del tipo de entrada deberia ser en la terminal
+        {
+            var Id_especie = valor.Id;
+            var existe = await _especie.FindAsync(Id_especie);
+            if (existe != null)
+            {
+                var result = await _especie.UpdateAsync(valor);
+                return $"Actualizacion de la especie con id {Id_especie} completada";
+            }
+            return $"Especie con id: {Id_especie} no existe";
+        }
 
-        public async Task<string> CreateAsync(Especie valor) // La validacion del tipo de entrada deberia ser en la terminal
+
+        public async Task<string> CreateSpeciesAsync(Especie valor) // La validacion del tipo de entrada deberia ser en la terminal
         {
             var Id_especie = valor.Id;
             var existe = await _especie.FindAsync(Id_especie);
             if (existe == null)
             {
-                var especine = await _especie.AddAsync(valor);
-                return $"Creacion de la especie con id {Id_especie} completada";
+                var especimen = await _especie.AddAsync(valor);
+                return $"Creacion de la especie con id {especimen.Id} completada";
             }
             return $"Especie con id: {Id_especie} ya existe";
         }

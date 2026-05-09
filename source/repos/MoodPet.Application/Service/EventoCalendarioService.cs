@@ -22,39 +22,34 @@ namespace MoodPet.Application.Service
         {
             var mascota = await _mascotaRepository.FindAsync(evento.MascotaId);
 
-            //Verificando que el usuario sea el dueño de la mascota
+            // Validaciones
             if (mascota.UserId != evento.UserId)
             {
                 throw new ArgumentException("El usuario no es el dueño de la mascota");
             }
 
-            //Verificando existencia de mascota
             if (mascota == null)
             {
                 throw new ArgumentException($"No se encontró la mascota con el id {evento.MascotaId}");
             }
 
-            //Verificando existencia de tipo de evento
             var tipo = await _tipoEventoRepository.FindAsync(evento.TipoEventoId);
             if (tipo == null)
             {
                 throw new ArgumentException($"No se encontró el tipo de evento con el id {evento.TipoEventoId}");
             }
 
-            //Verificando que no exista un evento con el mismo id
             var existingEvento = await _eventoCalendarioRepository.GetByIdAsync(evento.Id);
             if (existingEvento != null)
             {
                 throw new ArgumentException($"Ya existe un evento con el id {evento.Id}");
             }
 
-            //Verificando que la fecha del evento no sea en el pasado
             if (evento.FechaEvento < DateOnly.FromDateTime(DateTime.Now))
             {
                 throw new ArgumentException("La fecha del evento no puede ser en el pasado");
             }
 
-            //Verificando que el nombre del evento no esté vacío
             if (string.IsNullOrWhiteSpace(evento.titulo))
             {
                 throw new ArgumentException("El nombre del evento no puede estar vacío");
