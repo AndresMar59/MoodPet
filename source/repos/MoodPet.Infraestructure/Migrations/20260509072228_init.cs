@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MoodPet.Infraestructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,6 +30,8 @@ namespace MoodPet.Infraestructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Firstname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Lastname = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -66,7 +68,7 @@ namespace MoodPet.Infraestructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Evento",
+                name: "TiposEvento",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -77,24 +79,7 @@ namespace MoodPet.Infraestructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Evento", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Usuario",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    lastname = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    tel = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    role = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Usuario", x => x.id);
+                    table.PrimaryKey("PK_TiposEvento", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -204,7 +189,7 @@ namespace MoodPet.Infraestructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Raza",
+                name: "Razas",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -216,9 +201,9 @@ namespace MoodPet.Infraestructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Raza", x => x.Id);
+                    table.PrimaryKey("PK_Razas", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Raza_Especies_EspecieId",
+                        name: "FK_Razas_Especies_EspecieId",
                         column: x => x.EspecieId,
                         principalTable: "Especies",
                         principalColumn: "Id",
@@ -235,23 +220,23 @@ namespace MoodPet.Infraestructure.Migrations
                     Peso = table.Column<float>(type: "real", nullable: false),
                     Sexo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FechaNacimiento = table.Column<DateOnly>(type: "date", nullable: false),
-                    UsuarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     RazaId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Mascotas", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Mascotas_Raza_RazaId",
-                        column: x => x.RazaId,
-                        principalTable: "Raza",
+                        name: "FK_Mascotas_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Mascotas_Usuario_UsuarioId",
-                        column: x => x.UsuarioId,
-                        principalTable: "Usuario",
-                        principalColumn: "id",
+                        name: "FK_Mascotas_Razas_RazaId",
+                        column: x => x.RazaId,
+                        principalTable: "Razas",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -264,22 +249,31 @@ namespace MoodPet.Infraestructure.Migrations
                     titulo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FechaEvento = table.Column<DateOnly>(type: "date", nullable: false),
+                    Estado = table.Column<int>(type: "int", nullable: false),
                     TipoEventoId = table.Column<int>(type: "int", nullable: false),
-                    MascotaId = table.Column<int>(type: "int", nullable: false)
+                    MascotaId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CreaAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EventosCalendario", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_EventosCalendario_Evento_TipoEventoId",
-                        column: x => x.TipoEventoId,
-                        principalTable: "Evento",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_EventosCalendario_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_EventosCalendario_Mascotas_MascotaId",
                         column: x => x.MascotaId,
                         principalTable: "Mascotas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EventosCalendario_TiposEvento_TipoEventoId",
+                        column: x => x.TipoEventoId,
+                        principalTable: "TiposEvento",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -319,11 +313,17 @@ namespace MoodPet.Infraestructure.Migrations
                     estado = table.Column<bool>(type: "bit", nullable: false),
                     Semanas = table.Column<int>(type: "int", nullable: true),
                     Hora = table.Column<TimeOnly>(type: "time", nullable: false),
-                    MascotaId = table.Column<int>(type: "int", nullable: false)
+                    MascotaId = table.Column<int>(type: "int", nullable: false),
+                    AppIdentityUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TareasDiarias", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TareasDiarias_AspNetUsers_AppIdentityUserId",
+                        column: x => x.AppIdentityUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_TareasDiarias_Mascotas_MascotaId",
                         column: x => x.MascotaId,
@@ -405,6 +405,11 @@ namespace MoodPet.Infraestructure.Migrations
                 column: "TipoEventoId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_EventosCalendario_UserId",
+                table: "EventosCalendario",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_HistorialTarea_TareaId",
                 table: "HistorialTarea",
                 column: "TareaId");
@@ -415,19 +420,24 @@ namespace MoodPet.Infraestructure.Migrations
                 column: "RazaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Mascotas_UsuarioId",
+                name: "IX_Mascotas_UserId",
                 table: "Mascotas",
-                column: "UsuarioId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Raza_EspecieId",
-                table: "Raza",
+                name: "IX_Razas_EspecieId",
+                table: "Razas",
                 column: "EspecieId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Recomendaciones_MascotaId",
                 table: "Recomendaciones",
                 column: "MascotaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TareasDiarias_AppIdentityUserId",
+                table: "TareasDiarias",
+                column: "AppIdentityUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TareasDiarias_MascotaId",
@@ -466,10 +476,7 @@ namespace MoodPet.Infraestructure.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Evento");
+                name: "TiposEvento");
 
             migrationBuilder.DropTable(
                 name: "TareasDiarias");
@@ -478,10 +485,10 @@ namespace MoodPet.Infraestructure.Migrations
                 name: "Mascotas");
 
             migrationBuilder.DropTable(
-                name: "Raza");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Usuario");
+                name: "Razas");
 
             migrationBuilder.DropTable(
                 name: "Especies");

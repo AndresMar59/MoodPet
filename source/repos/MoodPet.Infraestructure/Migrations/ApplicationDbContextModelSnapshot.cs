@@ -333,9 +333,6 @@ namespace MoodPet.Infraestructure.Migrations
                     b.Property<string>("AppIdentityUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("DayOfWeek")
-                        .HasColumnType("int");
-
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
 

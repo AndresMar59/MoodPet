@@ -22,8 +22,4 @@
     <ProjectReference Include="..\MoodPet.Domain\MoodPet.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>
