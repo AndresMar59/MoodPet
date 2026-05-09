@@ -5,14 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using MoodPet.Domain.Entities;
 using MoodPet.Domain.Interfaces.Repositorio;
 using MoodPet.Infraestructure.Percistencia;
+using MoodPet.Infraestructure.Percistencia.Repositorios.General;
 
-public class EventoCalendarioRepository : IEventoCalendarioRepository
+public class EventoCalendarioRepository : GeneralRepository<Eventocalendario>, IEventoCalendarioRepository
 {
-    private readonly ApplicationDbContext _context;
-
     public EventoCalendarioRepository(ApplicationDbContext context)
+        :base(context)
     {
-        _context = context;
     }
 
     public async Task<Eventocalendario> CreateAsync(Eventocalendario evento)

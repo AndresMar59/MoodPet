@@ -18,6 +18,12 @@ namespace MoodPet.Domain.Entities
 
         public string? password { get; set; } // Es necesario asi para el mapping?
 
-        public string? role { get; set; }
+        //Navegación
+        public ICollection<Mascota> Mascotas { get; set; } = new List<Mascota>();
+        public ICollection<TareaDiaria> TareaDiarias { get; set; } = new List<TareaDiaria>();
+        public ICollection<Eventocalendario> EventosCalendarios { get; set; } = new List<Eventocalendario>();
+
+
+        //public string? role { get; set; }  creo que no es necesario el atributo role, ya que se maneja a través de Identity, pero lo dejo por si acaso
     }
 }
