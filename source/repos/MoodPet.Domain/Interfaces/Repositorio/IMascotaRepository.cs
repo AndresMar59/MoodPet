@@ -14,9 +14,9 @@ namespace MoodPet.Domain.Interfaces.Repositorio
 
         Task<bool> Delete(int id);
 
-        Task<Mascota> FindAsyncByUsuario(Guid id);
+        Task<Mascota> FindAsyncByUsuario(string id);
 
-        Task<List<Mascota>> GetAllAsyncbyUsuario(Guid Usuario_id);
+        Task<List<Mascota>> GetAllAsyncbyUsuario(string Usuario_id);
 
         Task<Mascota> UpdateMascota(Mascota mascota);
 

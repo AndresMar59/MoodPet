@@ -45,15 +45,15 @@ namespace MoodPet.Infraestructure.Percistencia.Repositorios
             return entity;
         } // Devuelve una tarea segun el id de esta, si no existe devuelve null
 
-        public async Task<Mascota> FindAsyncByUsuario(Guid id)
+        public async Task<Mascota> FindAsyncByUsuario(string id)
         {
-            var entity = await _context.Set<Mascota>().FirstOrDefaultAsync(e => e.UsuarioId == id);
+            var entity = await _context.Set<Mascota>().FirstOrDefaultAsync(e => e.UserId == id);
             return entity;
         } // Devuelve una tarea segun el id de la mascota, si no existe devuelve null
 
-        public async Task<List<Mascota>> GetAllAsyncbyUsuario(Guid Usuario_id)
+        public async Task<List<Mascota>> GetAllAsyncbyUsuario(string Usuario_id)
         {
-            var entity = await _context.Set<Mascota>().Where(e => e.UsuarioId == Usuario_id).ToListAsync();
+            var entity = await _context.Set<Mascota>().Where(e => e.UserId == Usuario_id).ToListAsync();
             return entity;
         }
 

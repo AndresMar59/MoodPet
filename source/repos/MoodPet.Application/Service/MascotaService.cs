@@ -24,10 +24,10 @@ namespace MoodPet.Application.Service
 
         public async Task<string> CreateAsync(Mascota animal) // La validacion del tipo de entrada deberia ser en la terminal
         {
-            var Usuario = await _userRepository.Userr(animal.UsuarioId);
+            var Usuario = await _userRepository.User(animal.UserId);
             if (Usuario == null)
             {
-                return $"Usario con id: {animal.UsuarioId} no existe. Digite un usuario valido";
+                return $"Usario con id: {animal.UserId} no existe. Digite un usuario valido";
             }
             var Id_raza = animal.RazaId;
             var existe = await _razaRepository.FindAsync(Id_raza);
@@ -59,7 +59,7 @@ namespace MoodPet.Application.Service
             return raza; // Te devuelve un objeto tipo raza (No se si es necesario pasarlo a string)
         }
 
-        public async Task<IEnumerable<Mascota>> GetAllMascotasByUsuario(Guid id)
+        public async Task<IEnumerable<Mascota>> GetAllMascotasByUsuario(string id)
         {
             var mascotas = await _mascota.GetAllAsyncbyUsuario(id); // Te devuelve una lista de objetos tipo mascota (No se si es necesario pasarlo a string)
             if (mascotas == null)
@@ -69,7 +69,7 @@ namespace MoodPet.Application.Service
             return mascotas;
         }
 
-        public async Task<Mascota> GetMascotaByUsuario(Guid id)
+        public async Task<Mascota> GetMascotaByUsuario(string id)
         {
             var mascotas = await _mascota.FindAsyncByUsuario(id); // Te devuelve una lista de objetos tipo mascota (No se si es necesario pasarlo a string)
             if (mascotas == null)
