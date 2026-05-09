@@ -31,7 +31,7 @@ namespace MoodPet.Infraestructure.Percistencia.Repositorios.General
 
         public virtual async Task<bool> Delete(int id)
         {
-            var entity = await _context.Set<TEntity>().FindAsync(id);
+            var entity = await _context.Set<TEntity>().FindAsync(id); // Ya trae validacion de quesi existe o no
             if (entity == null)
                 return false;
 
@@ -41,9 +41,9 @@ namespace MoodPet.Infraestructure.Percistencia.Repositorios.General
             return result >= 1; ;
         }
 
-        public virtual async Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> Predicate)
+        public virtual async Task<TEntity?> FindAsync(int id)
         {
-            return await _context.Set<TEntity>().FirstOrDefaultAsync(Predicate);
+            return await _context.Set<TEntity>().FirstOrDefaultAsync(e => e.Id == id);
         }
 
         public virtual async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate = null)

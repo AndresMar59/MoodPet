@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MoodPet.Infraestructure.Percistencia;
 
@@ -11,9 +12,11 @@ using MoodPet.Infraestructure.Percistencia;
 namespace MoodPet.Infraestructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260509050246_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -186,30 +189,17 @@ namespace MoodPet.Infraestructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreaAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Estado")
-                        .HasColumnType("int");
-
                     b.Property<DateOnly>("FechaEvento")
                         .HasColumnType("date");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<int>("MascotaId")
                         .HasColumnType("int");
 
                     b.Property<int>("TipoEventoId")
                         .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("titulo")
                         .IsRequired()
@@ -220,8 +210,6 @@ namespace MoodPet.Infraestructure.Migrations
                     b.HasIndex("MascotaId");
 
                     b.HasIndex("TipoEventoId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("EventosCalendario");
                 });
@@ -281,15 +269,14 @@ namespace MoodPet.Infraestructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UsuarioId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RazaId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Mascotas");
                 });
@@ -319,7 +306,7 @@ namespace MoodPet.Infraestructure.Migrations
 
                     b.HasIndex("EspecieId");
 
-                    b.ToTable("Razas");
+                    b.ToTable("Raza");
                 });
 
             modelBuilder.Entity("MoodPet.Domain.Entities.TareaDiaria", b =>
@@ -329,12 +316,6 @@ namespace MoodPet.Infraestructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AppIdentityUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("DayOfWeek")
-                        .HasColumnType("int");
 
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");
@@ -363,8 +344,6 @@ namespace MoodPet.Infraestructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppIdentityUserId");
-
                     b.HasIndex("MascotaId");
 
                     b.ToTable("TareasDiarias");
@@ -390,7 +369,38 @@ namespace MoodPet.Infraestructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TiposEvento");
+                    b.ToTable("Evento");
+                });
+
+            modelBuilder.Entity("MoodPet.Domain.Entities.Usuario", b =>
+                {
+                    b.Property<Guid>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("lastname")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("role")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("tel")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Usuario");
                 });
 
             modelBuilder.Entity("MoodPet.Infraestructure.Identity.AppIdentityUser", b =>
@@ -411,14 +421,6 @@ namespace MoodPet.Infraestructure.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Firstname")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Lastname")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -548,7 +550,7 @@ namespace MoodPet.Infraestructure.Migrations
             modelBuilder.Entity("MoodPet.Domain.Entities.Eventocalendario", b =>
                 {
                     b.HasOne("MoodPet.Domain.Entities.Mascota", "mascota")
-                        .WithMany("Eventos")
+                        .WithMany()
                         .HasForeignKey("MascotaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -557,12 +559,6 @@ namespace MoodPet.Infraestructure.Migrations
                         .WithMany()
                         .HasForeignKey("TipoEventoId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MoodPet.Infraestructure.Identity.AppIdentityUser", null)
-                        .WithMany("Eventos")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("TipoEvento");
@@ -589,13 +585,15 @@ namespace MoodPet.Infraestructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MoodPet.Infraestructure.Identity.AppIdentityUser", null)
-                        .WithMany("Mascotas")
-                        .HasForeignKey("UserId")
+                    b.HasOne("MoodPet.Domain.Entities.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Raza");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("MoodPet.Domain.Entities.Raza", b =>
@@ -611,12 +609,8 @@ namespace MoodPet.Infraestructure.Migrations
 
             modelBuilder.Entity("MoodPet.Domain.Entities.TareaDiaria", b =>
                 {
-                    b.HasOne("MoodPet.Infraestructure.Identity.AppIdentityUser", null)
-                        .WithMany("TareaDiarias")
-                        .HasForeignKey("AppIdentityUserId");
-
                     b.HasOne("MoodPet.Domain.Entities.Mascota", "Mascota")
-                        .WithMany("Tareas")
+                        .WithMany()
                         .HasForeignKey("MascotaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -638,22 +632,6 @@ namespace MoodPet.Infraestructure.Migrations
             modelBuilder.Entity("MoodPet.Domain.Entities.Especie", b =>
                 {
                     b.Navigation("Razas");
-                });
-
-            modelBuilder.Entity("MoodPet.Domain.Entities.Mascota", b =>
-                {
-                    b.Navigation("Eventos");
-
-                    b.Navigation("Tareas");
-                });
-
-            modelBuilder.Entity("MoodPet.Infraestructure.Identity.AppIdentityUser", b =>
-                {
-                    b.Navigation("Eventos");
-
-                    b.Navigation("Mascotas");
-
-                    b.Navigation("TareaDiarias");
                 });
 #pragma warning restore 612, 618
         }
