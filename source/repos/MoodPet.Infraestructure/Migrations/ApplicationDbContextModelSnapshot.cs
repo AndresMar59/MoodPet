@@ -222,8 +222,14 @@ namespace MoodPet.Infraestructure.Migrations
                     b.Property<bool>("Completada")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
+                    b.Property<bool>("Eliminada")
+                        .HasColumnType("bit");
+
+                    b.Property<DateOnly>("Fecha")
+                        .HasColumnType("date");
+
+                    b.Property<TimeOnly>("Hora")
+                        .HasColumnType("time");
 
                     b.Property<int>("TareaId")
                         .HasColumnType("int");
@@ -242,9 +248,6 @@ namespace MoodPet.Infraestructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Edad")
-                        .HasColumnType("int");
 
                     b.Property<DateOnly>("FechaNacimiento")
                         .HasColumnType("date");
@@ -310,9 +313,6 @@ namespace MoodPet.Infraestructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("DayOfWeek")
-                        .HasColumnType("int");
 
                     b.Property<string>("Descripcion")
                         .HasColumnType("nvarchar(max)");

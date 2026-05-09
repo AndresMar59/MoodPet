@@ -10,13 +10,27 @@ namespace MoodPet.Domain.Entities
 
         public string Nombre { get; set; }
 
-        public int Edad { get; set; }
+        public int? Edad
+        {
+            get
+            {
+                DateOnly hoy = DateOnly.FromDateTime(DateTime.Now);
+                int edad = hoy.Year - FechaNacimiento.Year;
+
+                if (FechaNacimiento > hoy.AddYears(-edad))
+                {
+                    edad--;
+                }
+
+                return edad;
+            }
+        }
 
         public float Peso { get; set; }
 
         public string Sexo { get; set; } 
 
-        public DateOnly FechaNacimiento { get; set; }
+        public DateOnly FechaNacimiento { get; set; }  
 
         public Usuario Usuario { get; set; }
 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MoodPet.Infraestructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Inicial : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -232,7 +232,6 @@ namespace MoodPet.Infraestructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Edad = table.Column<int>(type: "int", nullable: false),
                     Peso = table.Column<float>(type: "real", nullable: false),
                     Sexo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FechaNacimiento = table.Column<DateOnly>(type: "date", nullable: false),
@@ -316,7 +315,6 @@ namespace MoodPet.Infraestructure.Migrations
                     Titulo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Fecha = table.Column<DateOnly>(type: "date", nullable: false),
-                    DayOfWeek = table.Column<int>(type: "int", nullable: false),
                     Recurrente = table.Column<bool>(type: "bit", nullable: false),
                     estado = table.Column<bool>(type: "bit", nullable: false),
                     Semanas = table.Column<int>(type: "int", nullable: true),
@@ -341,8 +339,10 @@ namespace MoodPet.Infraestructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TareaId = table.Column<int>(type: "int", nullable: false),
-                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Completada = table.Column<bool>(type: "bit", nullable: false)
+                    Fecha = table.Column<DateOnly>(type: "date", nullable: false),
+                    Hora = table.Column<TimeOnly>(type: "time", nullable: false),
+                    Completada = table.Column<bool>(type: "bit", nullable: false),
+                    Eliminada = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
