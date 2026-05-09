@@ -22,11 +22,24 @@ namespace MoodPet.Application.Service
         public async Task<TipoEvento> GetByID(int id) // La validacion del tipo de entrada deberia ser en la terminal
         {
             var tipoEvento = await _Tipo.FindAsync(id);
-            if (tipoEvento == null)
+            if (tipoEvento == null || tipoEvento.IsDeleted)
             {
                 throw new ArgumentException($"No se encontro el tipo de evento con el id {id}");
             }
             return tipoEvento; // Te devuelve un objeto tipo tipo de evento (No se si es necesario pasarlo a string)
+        }
+
+        // Actualiza el tipo de evento.
+        public async Task<string> UpdateTipoEventoAsync(TipoEvento valor) // La validacion del tipo de entrada deberia ser en la terminal
+        {
+            var Id_tipoEvento = valor.Id;
+            var existe = await _Tipo.FindAsync(Id_tipoEvento);
+            if (existe != null)
+            {
+                var result = await _Tipo.UpdateAsync(valor);
+                return $"Actualizacion del tipo de evento con id {result.Id} completada";
+            }
+            return $"Tipo de evento con id: {Id_tipoEvento} no existe";
         }
 
         public async Task<string> DeleteById(int id) // La validacion del tipo de entrada deberia ser en la terminal
@@ -46,8 +59,8 @@ namespace MoodPet.Application.Service
             var existe = await _Tipo.FindAsync(Id_tipoEvento);
             if (existe == null)
             {
-                await _Tipo.AddAsync(valor);
-                return $"Creacion del evento con id {Id_tipoEvento} completada";
+                var newTipo = await _Tipo.AddAsync(valor);
+                return $"Creacion del evento con id {newTipo.Id} completada";
             }
             return $"Evento con id: {Id_tipoEvento} ya existe";
         }

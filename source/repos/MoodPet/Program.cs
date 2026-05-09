@@ -27,6 +27,8 @@ builder.Services.AddScoped<IEspecieRepository, EspecieRepository>();
 builder.Services.AddScoped<EspecieService>();
 builder.Services.AddScoped<IRazaRepository, RazaRepository>();
 builder.Services.AddScoped<RazaService>();
+builder.Services.AddScoped<ITipoEventoRepository, TipoEventoRepository>();
+builder.Services.AddScoped<TipoEventoService>();
 //builder.Services.AddScoped<>();
 
 
