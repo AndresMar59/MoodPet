@@ -22,6 +22,9 @@ namespace MoodPet.Domain.Entities
         public int MascotaId { get; set; } 
         public Mascota mascota { get; set; } // Relacion con Mascotas (Lleva CRUD)
 
+        //Fk Usuario
+        public string UserId { get; set; }
+
         public enum EstadoEvento
         {
             Pendiente,

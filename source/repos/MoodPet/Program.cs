@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
+using MoodPet.Application.Service;
 using MoodPet.Domain.Interfaces;
 using MoodPet.Infraestructure.Identity;
 using MoodPet.Infraestructure.Percistencia;
@@ -16,6 +17,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<Auth>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+//builder.Services.AddScoped<IEventoCalendarioRepository, EventoCalendarioRepository>();
+//builder.Services.AddScoped<>();
+
 
 
 builder.Services.AddControllers();
@@ -136,10 +142,10 @@ using (var scope = app.Services.CreateScope())
         var result = userRepository.CreateUser(
             new MoodPet.Domain.Entities.Usuario
             {
-                email = "admin@admin.com",
-                password = "Admin123!",
-                name = "Admin",
-                lastname = "Admin",
+                Email = "admin@admin.com",
+                Password = "Admin123!",
+                FirstName = "Admin",
+                LastName = "Admin",
             }).Result;
 
         var resultUsertoRole = userRepository.AddToRoleAsync(result, "Admin").Result;

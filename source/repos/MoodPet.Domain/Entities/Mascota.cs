@@ -18,13 +18,16 @@ namespace MoodPet.Domain.Entities
 
         public DateOnly FechaNacimiento { get; set; }
 
-        public Usuario Usuario { get; set; }
+        //FK Usuario
+        public string UserId { get; set; }
 
-        public Guid UsuarioId { get; set; }
-
+        //FK Raza
         public Raza Raza { get; set; }
 
         public int RazaId { get; set; }
 
+        //Navegación
+        public ICollection<Eventocalendario> Eventos { get; set; } = new List<Eventocalendario>();
+        public ICollection<TareaDiaria> Tareas { get; set; } = new List<TareaDiaria>();
     }
 }

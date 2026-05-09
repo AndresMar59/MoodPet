@@ -1,8 +1,9 @@
-﻿using System;
+﻿using MoodPet.Domain.Entities;
+using MoodPet.Domain.Interfaces;
+using MoodPet.Infraestructure.Percistencia.Repositorios;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using MoodPet.Domain.Entities;
-using MoodPet.Domain.Interfaces;
 
 namespace MoodPet.Application.Service
 {
@@ -25,11 +26,11 @@ namespace MoodPet.Application.Service
 
             if (user == null)
             {
-                return "Credenciales invalidas, no existe usuario)";
+                return "Credenciales invalidas";
 
             }
 
-            var credencialesValidas = await _user.CheckPasswordAsync(user.id.ToString(), password);
+            var credencialesValidas = await _user.CheckPasswordAsync(user.Id.ToString(), password);
 
             if (!credencialesValidas)
             {
@@ -41,18 +42,11 @@ namespace MoodPet.Application.Service
 
         }
 
-
-        public async Task<string> RegisterUser(Usuario usuario)
+        public async Task<Usuario> RegisterUser(Usuario usuario)
         {
-            var user = await _user.CreateUser(usuario);
-            if (user == null) { return "Usuario no se pudo crear"; }
-            else
-            {
-                var member = "member";
-                await _user.AddToRoleAsync(usuario, member);
-                return "Usuario creado satisfactoriamente";
-            }
-        }
+            await _user.CreateUser(usuario);
 
+            return usuario;
+        }
     }
 }

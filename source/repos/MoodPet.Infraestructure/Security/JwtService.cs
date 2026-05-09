@@ -24,9 +24,9 @@ namespace MoodPet.Infraestructure.Security
             {
                 //reclamaciones o cracteristicas que identifican al usuario
                 var claims = new List<Claim>() {
-                new Claim(ClaimTypes.NameIdentifier, usuario.id.ToString()),
-                new Claim(ClaimTypes.Name, usuario.email),
-                new Claim(ClaimTypes.GivenName, usuario.fullName),
+                new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
+                new Claim(ClaimTypes.Name, usuario.Email),
+                new Claim(ClaimTypes.GivenName, usuario.FirstName + " " + usuario.LastName),
             };
 
                 foreach (var role in roles)
@@ -61,8 +61,8 @@ namespace MoodPet.Infraestructure.Security
             {
                 var claims = new List<Claim>()
 {
-              new Claim(ClaimTypes.NameIdentifier, user.id.ToString()),
-              new Claim(ClaimTypes.Email, user.email),
+              new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+              new Claim(ClaimTypes.Email, user.Email),
 };
 
                 foreach (var role in list)

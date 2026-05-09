@@ -20,13 +20,13 @@ namespace MoodPet.Infraestructure.Percistencia
 
        public DbSet<Mascota> Mascotas { get; set; } 
 
-       public DbSet<TipoEvento> Evento { get; set; }
+       public DbSet<TipoEvento> TiposEvento { get; set; }
 
        public DbSet<TareaDiaria> TareasDiarias { get; set; }
 
         public DbSet<Recomendacion> Recomendaciones { get; set; }   
 
-        public DbSet<Raza> Raza { get; set; }
+        public DbSet<Raza> Razas { get; set; }
 
         public DbSet<HistorialTarea> HistorialTarea { get; set; }
 
@@ -38,22 +38,29 @@ namespace MoodPet.Infraestructure.Percistencia
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configuración de la relación Uno a Muchos (Una Mascota tiene muchos Eventos)
+            // Mascota 1 - N Evento_Calendario
+            // TipoEvento 1 - N Evento_Calendario
+            // User 1 - N Evento_Calendario
             modelBuilder.Entity<Eventocalendario>(entity =>
             {
                 entity.HasKey(e => e.Id); // Llave primaria
 
                 entity.HasOne(e => e.mascota)             // Un evento tiene una mascota
-                    .WithMany()                           // Una mascota puede tener muchos eventos (puedes poner .WithMany(m => m.Eventos) si agregas la colección en Mascota)
+                    .WithMany(e => e.Eventos)             // Una mascota puede tener muchos eventos (puedes poner .WithMany(m => m.Eventos) si agregas la colección en Mascota)
                     .HasForeignKey(e => e.MascotaId)      // Clave foránea en Eventocalendario
                     .OnDelete(DeleteBehavior.Cascade); // Si se borra la mascota, se borran sus eventos
 
-                entity.HasOne(e => e.TipoEvento).WithMany()                           
+                entity.HasOne(e => e.TipoEvento)
+                    .WithMany()                           
                     .HasForeignKey(e => e.TipoEventoId);
+                    
+                entity.HasOne<AppIdentityUser>() // Relación con AppIdentityUser
+                    .WithMany(e => e.Eventos) // Un usuario puede tener muchos eventos
+                    .HasForeignKey(e => e.UserId) // Clave foránea en Eventocalendario
+                    .OnDelete(DeleteBehavior.NoAction); // Si se borra el usuario, se borran sus eventos
             });
 
-
-
+            // especie 1 - N raza
             modelBuilder.Entity<Raza>(entity =>
             {
                 entity.HasKey(e => e.Id); 
@@ -64,6 +71,7 @@ namespace MoodPet.Infraestructure.Percistencia
                     .OnDelete(DeleteBehavior.Cascade);    
             });
 
+            // tarea diaria 1 - N historial tarea
             modelBuilder.Entity<HistorialTarea>(entity =>
             {
                 entity.HasKey(e => e.Id);
@@ -73,20 +81,22 @@ namespace MoodPet.Infraestructure.Percistencia
                     .HasForeignKey(e => e.TareaId);
             });
 
+            // user 1 - N mascota
+            // raza 1 - N mascota
             modelBuilder.Entity<Mascota>(entity =>
             {
                 entity.HasKey(e => e.Id);
 
-                entity.HasOne(e => e.Usuario)
-                    .WithMany()
-                    .HasForeignKey(e => e.UsuarioId).OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne<AppIdentityUser>()
+                    .WithMany(e => e.Mascotas)
+                    .HasForeignKey(e => e.UserId).OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(e => e.Raza)
                     .WithMany()
                     .HasForeignKey(e => e.RazaId);
             });
 
-
+            // mascota 1 - N recomendacion
             modelBuilder.Entity<Recomendacion>(entity =>
             {
                 entity.HasKey(e => e.Id);
@@ -96,12 +106,13 @@ namespace MoodPet.Infraestructure.Percistencia
                     .HasForeignKey(e => e.MascotaId);
             });
 
+            // mascota 1 - N tarea diaria
             modelBuilder.Entity<TareaDiaria>(entity =>
             {
                 entity.HasKey(e => e.Id);
 
                 entity.HasOne(e => e.Mascota)
-                    .WithMany()
+                    .WithMany(e => e.Tareas)
                     .HasForeignKey(e => e.MascotaId);
             });
 

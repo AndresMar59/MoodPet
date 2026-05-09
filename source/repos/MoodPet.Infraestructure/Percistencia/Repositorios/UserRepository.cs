@@ -23,7 +23,7 @@ namespace MoodPet.Infraestructure.Percistencia.Repositorios
 
         public async Task<Usuario> AddToRoleAsync(Usuario usuario, string rolename)
         {
-            var userDb = await _IdentityUser.FindByEmailAsync(usuario.email);
+            var userDb = await _IdentityUser.FindByEmailAsync(usuario.Email);
             var result = await _IdentityUser.AddToRoleAsync(userDb, rolename);
 
             return usuario;
@@ -43,14 +43,14 @@ namespace MoodPet.Infraestructure.Percistencia.Repositorios
         {
             var identityUser = usuario.ToIdentityUser();
 
-            var result = await _IdentityUser.CreateAsync(identityUser, usuario.password);
+            var result = await _IdentityUser.CreateAsync(identityUser, usuario.Password);
 
             if (result.Succeeded)
             {
 
                 if (Guid.TryParse(identityUser.Id, out Guid generatedId))
                 {
-                    usuario.id = generatedId;
+                    usuario.Id = generatedId;
                 }
 
                 return usuario;
