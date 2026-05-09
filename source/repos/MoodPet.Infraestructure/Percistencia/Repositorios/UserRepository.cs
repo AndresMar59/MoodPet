@@ -78,7 +78,8 @@ namespace MoodPet.Infraestructure.Percistencia.Repositorios
             return await _IdentityUser.FindByEmailAsync(email) != null;
         }
 
-        public async Task<AppIdentityUser?> User(string id)
+        //No se ocupa al momento.
+        public async Task<AppIdentityUser?> GetUserByIdAsync(string id)
         {
             return await _IdentityUser.FindByIdAsync(id);
         }

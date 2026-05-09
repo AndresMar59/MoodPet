@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MoodPet.Domain.Entities
 {
-    public class Mascota
+    public class Mascota : GeneralEntity
     {
-
-        public int Id { get; set; }
 
         public string Nombre { get; set; }
 

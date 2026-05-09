@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Text;
 using MoodPet.Domain.Entities;
+using MoodPet.Domain.Interfaces.General;
 
 namespace MoodPet.Domain.Interfaces.Repositorio
 {
-    public interface IMascotaRepository
+    public interface IMascotaRepository : IGeneralRepository<Mascota>
     {
 
         Task<Mascota> AddAsync(Mascota entity);
 
         Task<Mascota> FindAsync(int id);
+
+        Task<Mascota> GetById(int mascotaId);
 
         Task<bool> Delete(int id);
 

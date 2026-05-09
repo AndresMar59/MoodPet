@@ -12,7 +12,6 @@ namespace MoodPet.Domain.Interfaces
 
         Task<Usuario> CreateUser(Usuario Usario);
 
-
         Task<bool> CheckPasswordAsync(string userid, string password);
 
         Task<bool> UserExists(string email);

@@ -84,7 +84,7 @@ namespace MoodPet.Infraestructure.Percistencia.Repositorios.General
 
         public virtual async Task<TEntity> FindAsync(int id)
         {
-            return await _context.Set<TEntity>().FirstOrDefaultAsync(e => e.Id == id);
+            return await _context.Set<TEntity>().FirstOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
         }
     }
 }

@@ -4,14 +4,16 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using MoodPet.Domain.Entities;
 using MoodPet.Domain.Interfaces.Repositorio;
+using MoodPet.Infraestructure.Percistencia.Repositorios.General;
 
 namespace MoodPet.Infraestructure.Percistencia.Repositorios
 {
-    public class MascotaRepsitory : IMascotaRepository
+    public class MascotaRepsitory : GeneralRepository<Mascota>, IMascotaRepository
     {
 
         public readonly ApplicationDbContext _context;
-        public MascotaRepsitory(ApplicationDbContext context)
+        public MascotaRepsitory(ApplicationDbContext context):
+            base(context)
         {
             _context = context;
         }
@@ -27,6 +29,16 @@ namespace MoodPet.Infraestructure.Percistencia.Repositorios
             }
             return entity; 
         }
+
+        public async Task<Mascota> GetById(int mascotaId)
+        {
+            return await _context.Mascotas
+                .Include(r => r.Raza)
+                .ThenInclude(r => r.Especie)
+                .Where(r => !r.IsDeleted && r.Id == mascotaId)
+                .FirstOrDefaultAsync();
+        }
+
 
         public async Task<bool> Delete(int id)
         {
@@ -53,8 +65,11 @@ namespace MoodPet.Infraestructure.Percistencia.Repositorios
 
         public async Task<List<Mascota>> GetAllAsyncbyUsuario(string Usuario_id)
         {
-            var entity = await _context.Set<Mascota>().Where(e => e.UserId == Usuario_id).ToListAsync();
-            return entity;
+            return await _context.Mascotas
+                .Include(r => r.Raza)
+                .ThenInclude(r => r.Especie)
+                .Where(r => !r.IsDeleted && r.UserId == Usuario_id)
+                .ToListAsync();
         }
 
         public async Task<Mascota> UpdateMascota(Mascota mascota)
