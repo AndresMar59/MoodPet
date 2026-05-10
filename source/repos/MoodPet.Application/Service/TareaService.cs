@@ -33,12 +33,18 @@ namespace MoodPet.Application.Service
                 return $"La fecha de la tarea no puede ser anterior a la fecha actual. Digite una fecha valida";
             }
 
+            var semanas = tarea.Semanas;
+            if (semanas > 12 || semanas < 1)
+            {
+                return $"eEl rango se semanas permitidas son entre 1-12. Faovr ingresa un numero de semanas en el rago permitido";
+            }
+
             var estado = tarea.Recurrente;
             if (estado == true)
             {
                 var semnas = tarea.Semanas;
 
-                for (int i = 0; i <= semnas; i++)
+                for (int i = 0; i < semnas; i++)
                 {
                     var historial = new HistorialTarea
                     {
@@ -97,8 +103,32 @@ namespace MoodPet.Application.Service
             return tarea;
         }
 
+        public async Task<bool> CompleteTareaBySemana(int Semana, int Id)
 
-        public async Task<bool> CompleteTarea(int Id_Historial, int Id_Tarea)
+        {
+            var historial = await _historial.GetAllAsyncbyTarea(Id);
+            if (Semana > historial.Count)
+            {
+                throw new ArgumentException($"La semana {Semana} no existe para la tarea con id {Id}");
+            }
+
+            var tarea = historial[Semana - 1];
+            var fecha = tarea.Fecha;
+            var fechaActual = DateOnly.FromDateTime(DateTime.Now);
+            if (fecha > fechaActual)
+            {
+                throw new ArgumentException($"No se puede completar la tarea antes de su fecha programada. La fecha programada es {fecha}");
+            }
+            else if (tarea.Completada == true)
+            {
+                throw new ArgumentException($"La tarea de la semana {Semana} ya ha sido completada");
+            }
+
+            var completeTarea = await _historial.Complete(tarea.Id);
+            return completeTarea;
+        }
+
+        public async Task<bool> CompleteTareaByHistorial(int Id_Historial, int Id_Tarea)
         {
             var tarea = await _tarea.FindAsync(Id_Tarea);
             if (tarea == null)
@@ -134,10 +164,22 @@ namespace MoodPet.Application.Service
 
             for (var i = 0; i < historial.Count; i++)
             {
-                await _historial.Delete(historial[i].Id);}
+                await _historial.Delete(historial[i].Id);
+            }
 
             return $"Eliminacion de la tarea con id {id} completada";
 
+        }
+
+        public async Task<List<HistorialTarea>> GetHistorialByTarea(int valor) // La validacion del tipo de entrada deberia ser en la terminal
+        {
+            var existe = await _historial.GetAllAsyncbyTarea(valor);
+            if (existe != null)
+            {
+
+                throw new ArgumentException($"No se encontro la tarea con el id {valor}");
+            }
+            return existe;
         }
     }
 }

@@ -46,7 +46,9 @@ builder.Services.AddScoped<EventoCalendarioService>();
 builder.Services.AddScoped<EspecieService>();
 builder.Services.AddScoped<RazaService>();
 builder.Services.AddScoped<TipoEventoService>();
-builder.Services.AddScoped<MascotaService>();
+builder.Services.AddScoped<IMascotaRepository, MascotaRepsitory>();
+//builder.Services.AddScoped<>();
+//builder.Services.AddScoped<>();
 //builder.Services.AddScoped<>();
 
 
@@ -107,7 +109,7 @@ builder.Services.AddSwaggerGen(c =>
 
 {
     c.SwaggerDoc("v1", new OpenApiInfo
-    {
+        Title = "MoodPet Api",
         Title = "MoodPet Api",
         Version = "v1"
 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MoodPet.Infraestructure.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class Inital : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -221,7 +221,9 @@ namespace MoodPet.Infraestructure.Migrations
                     Sexo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FechaNacimiento = table.Column<DateOnly>(type: "date", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RazaId = table.Column<int>(type: "int", nullable: false)
+                    RazaId = table.Column<int>(type: "int", nullable: false),
+                    CreaAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

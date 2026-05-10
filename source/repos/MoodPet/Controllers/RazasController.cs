@@ -9,7 +9,7 @@ namespace MoodPetApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class RazasController : Controller
     {
         private readonly RazaService _razaService;
@@ -19,6 +19,7 @@ namespace MoodPetApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddRaza(AddRazaDto razaDto)
         {
             if (!ModelState.IsValid)
@@ -44,7 +45,9 @@ namespace MoodPetApi.Controllers
             }
         }
 
+        
         [HttpGet("{razaId:int}")]
+        [Authorize(Roles = "Admin,User")] // Ambos pueden ver
         public async Task<IActionResult> GetRazaById(int razaId)
         {
             try
@@ -72,6 +75,7 @@ namespace MoodPetApi.Controllers
         }
 
         [HttpPut("{razaId:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int razaId, AddRazaDto updateRazaDto)
         {
             if (!ModelState.IsValid)
@@ -100,6 +104,7 @@ namespace MoodPetApi.Controllers
         }
 
         [HttpDelete("{razaId:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int razaId)
         {
             try
@@ -116,5 +121,41 @@ namespace MoodPetApi.Controllers
                 return NotFound(new { message = ex.Message });
             }
         }
+
+
+
+        [HttpGet("Especies/{especieId:int}")]
+        [Authorize(Roles = "Admin,User")]
+        public async Task<IActionResult> GetRazasByEspecie(int especieId)
+        {
+            try
+            {
+                var razas = await _razaService.GetRazabyEspecies(especieId);
+
+                var dtos = razas.Select(raza => new
+                {
+                    raza.Id,
+                    raza.Nombre,
+                    Especie = raza.Especie != null ? new
+                    {
+                        raza.Especie.Id,
+                        raza.Especie.Nombre
+                    } : null
+                });
+
+                return Ok(dtos);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Ocurrió un error inesperado", details = ex.Message });
+            }
+        }
+
+
     }
-}
+    }
+

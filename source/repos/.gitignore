@@ -3,3 +3,5 @@ obj/
 *.user
 *.suo
 .vs/
+MoodPet\appsettings.json
+MoodPet\docker-compose.yml
