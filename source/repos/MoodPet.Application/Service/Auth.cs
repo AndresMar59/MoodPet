@@ -20,6 +20,22 @@ namespace MoodPet.Application.Service
 
         }
 
+        public async Task<string> GetUserRole(string email)
+        {
+            var roles = await _user.GetUserRoles(email);
+            if (roles.Contains("Admin"))
+            {
+                return "Admin";
+            }
+
+            return "User";
+
+
+            
+
+        }
+
+
         public async Task<string> Login(string email, string password)
         {
             var user = await _user.GetUserByEmail(email);
@@ -42,11 +58,19 @@ namespace MoodPet.Application.Service
 
         }
 
-        public async Task<Usuario> RegisterUser(Usuario usuario)
+        public async Task<bool> RegisterUser(Usuario usuario)
         {
-            await _user.CreateUser(usuario);
 
-            return usuario;
+            var result = await _user.UserExists(usuario.Email);
+            if (result == false)
+            {
+                var create = await _user.CreateUser(usuario);
+                return true;
+            }
+
+
+
+            return false;
         }
     }
 }

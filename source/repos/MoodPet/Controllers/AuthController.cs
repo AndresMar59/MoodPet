@@ -30,6 +30,7 @@ namespace MoodPetApi.Controllers
             };
 
             var result = await _authService.RegisterUser(newUser);
+            if (result == false) return BadRequest("Usuario ya existe");
 
             return Ok("Registro exitoso");
         }
@@ -43,7 +44,10 @@ namespace MoodPetApi.Controllers
                 loginDto.Password
             );
 
-            return Ok(new { Token = result });
+            var role = await _authService.GetUserRole(loginDto.Email);
+            
+
+            return Ok(new { Token = result, Role = role});
         }
 
 

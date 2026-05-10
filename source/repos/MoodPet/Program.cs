@@ -16,23 +16,36 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
+
 // Add services to the container.
 
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<Auth>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IEventoCalendarioRepository, EventoCalendarioRepository>();
-builder.Services.AddScoped<EventoCalendarioService>();
 builder.Services.AddScoped<IEspecieRepository, EspecieRepository>();
-builder.Services.AddScoped<EspecieService>();
 builder.Services.AddScoped<IRazaRepository, RazaRepository>();
-builder.Services.AddScoped<RazaService>();
 builder.Services.AddScoped<ITipoEventoRepository, TipoEventoRepository>();
-builder.Services.AddScoped<TipoEventoService>();
 builder.Services.AddScoped<IMascotaRepository, MascotaRepsitory>();
-builder.Services.AddScoped<MascotaService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<Auth>();
+builder.Services.AddScoped<EventoCalendarioService>();
+builder.Services.AddScoped<EspecieService>();
+builder.Services.AddScoped<RazaService>();
+builder.Services.AddScoped<TipoEventoService>();
+builder.Services.AddScoped<MascotaService>();
 //builder.Services.AddScoped<>();
 
 
@@ -94,7 +107,7 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "Sumativa Libro",
+        Title = "MoodPet Api",
         Version = "v1"
 
     });
@@ -118,6 +131,8 @@ builder.Services.AddSwaggerGen(c =>
 
 
 var app = builder.Build();
+
+app.UseCors("AllowFrontend");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

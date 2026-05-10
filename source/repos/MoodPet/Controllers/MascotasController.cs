@@ -27,7 +27,7 @@ namespace MoodPetApi.Controllers
             }
 
             // Si el userId no se proporciona en el DTO, lo obtenemos del token JWT
-            var userId = this.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
             if (mascotaDto.userId == null)
             {
