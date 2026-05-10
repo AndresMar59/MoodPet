@@ -9,7 +9,7 @@ namespace MoodPetApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class EspeciesController : Controller
     {
         private readonly EspecieService _especieService;
@@ -19,6 +19,7 @@ namespace MoodPetApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddSpecies(AddSpeciesDto speciesDto)
         {
             if (!ModelState.IsValid)
@@ -43,6 +44,7 @@ namespace MoodPetApi.Controllers
         }
 
         [HttpGet("{speciesId:int}")]
+        [Authorize(Roles = "Admin,User")]
         public async Task<IActionResult> GetSpeciesById(int speciesId)
         {
             try
@@ -71,6 +73,7 @@ namespace MoodPetApi.Controllers
         }
 
         [HttpPatch("{speciesId:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int speciesId, AddSpeciesDto updateSpeciesDto)
         {
             if (!ModelState.IsValid)
@@ -99,6 +102,7 @@ namespace MoodPetApi.Controllers
         }
 
         [HttpDelete("{speciesId:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int speciesId)
         {
             try

@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 using MoodPet.Domain.Entities;
 using MoodPet.Domain.Interfaces.General;
+using MoodPet.Infraestructure.Percistencia.Repositorios.General;
 
 namespace MoodPet.Application.Service
 {
     public class RazaService
     {
         public readonly IEspecieRepository _especie;
-        public readonly IRazaRepository _raza;
+        public readonly RazaRepository _raza;
 
-        public RazaService(IEspecieRepository especie, IRazaRepository raza)
+        public RazaService(IEspecieRepository especie, RazaRepository raza)
         {
             _especie = especie;
             _raza = raza;
@@ -82,5 +83,15 @@ namespace MoodPet.Application.Service
             return $"Raza con id: {Id_raza} ya existe";
         }
 
+
+        public async Task<List<Raza>> GetRazabyEspecies(int id) // La validacion del tipo de entrada deberia ser en la terminal
+        {
+            var raza = await _raza.GetRazasByEspecieIdAsync(id);
+            if (raza == null)
+            {
+                throw new ArgumentException($"No se encontro las razas con el la especie id: {id}");
+            }
+            return raza; // Te devuelve un objeto tipo raza (No se si es necesario pasarlo a string)
+        }
     }
 }

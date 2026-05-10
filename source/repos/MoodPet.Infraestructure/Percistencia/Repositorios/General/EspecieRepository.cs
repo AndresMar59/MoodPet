@@ -21,6 +21,8 @@ namespace MoodPet.Infraestructure.Percistencia.Repositorios.General
                 .Where(e => !e.IsDeleted && e.Id == speciesId)
                 .FirstOrDefaultAsync();
         }
+
+        
     }
 }
 
