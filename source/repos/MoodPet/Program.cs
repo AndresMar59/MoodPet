@@ -41,6 +41,7 @@ builder.Services.AddScoped<ITipoEventoRepository, TipoEventoRepository>();
 builder.Services.AddScoped<IMascotaRepository, MascotaRepsitory>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<Auth>();
+builder.Services.AddScoped<AdminService>();
 builder.Services.AddScoped<EventoCalendarioService>();
 builder.Services.AddScoped<EspecieService>();
 builder.Services.AddScoped<RazaService>();

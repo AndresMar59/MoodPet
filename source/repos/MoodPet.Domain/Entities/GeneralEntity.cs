@@ -11,7 +11,7 @@ namespace MoodPet.Domain.Entities
 
         public DateTime CreaAt { get; set; } = DateTime.Now;
 
-        public bool IsDeleted { get; set; }
+        public bool IsDeleted { get; set; } = false;
 
     }
 }
