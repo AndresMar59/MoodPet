@@ -12,8 +12,8 @@ using MoodPet.Infraestructure.Percistencia;
 namespace MoodPet.Infraestructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260509091048_init")]
-    partial class init
+    [Migration("20260510224907_Inital")]
+    partial class Inital
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -267,8 +267,14 @@ namespace MoodPet.Infraestructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("CreaAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateOnly>("FechaNacimiento")
                         .HasColumnType("date");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Nombre")
                         .IsRequired()

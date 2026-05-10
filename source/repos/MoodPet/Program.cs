@@ -20,20 +20,25 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<Auth>();
 builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped<IEventoCalendarioRepository, EventoCalendarioRepository>();
-builder.Services.AddScoped<EventoCalendarioService>();
+builder.Services.AddScoped<Auth>();
+
 builder.Services.AddScoped<IEspecieRepository, EspecieRepository>();
 builder.Services.AddScoped<EspecieService>();
-builder.Services.AddScoped<IRazaRepository, RazaRepository>();
+
+builder.Services.AddScoped<IRazaRepository, RazaRepository>(); 
+builder.Services.AddScoped<RazaRepository>(); 
 builder.Services.AddScoped<RazaService>();
-builder.Services.AddScoped<ITipoEventoRepository, TipoEventoRepository>();
-builder.Services.AddScoped<TipoEventoService>();
+
 builder.Services.AddScoped<IMascotaRepository, MascotaRepsitory>();
 builder.Services.AddScoped<MascotaService>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-//builder.Services.AddScoped<>();
+
+builder.Services.AddScoped<ITareaRepository, TareaRepository>();
+builder.Services.AddScoped<TareaRepository>(); 
+builder.Services.AddScoped<IHistorialRepository, HistorialTareaRepository>();
+builder.Services.AddScoped<HistorialTareaRepository>();
+builder.Services.AddScoped<TareaService>();
+//builder.Services.AddScoped();
 
 
 

@@ -104,7 +104,7 @@ namespace MoodPetApi.Controllers
             {
                 var mascotas = await _mascotaService.GetAllMascotasByUsuario(userId);
 
-                var dtos = mascotas.Select(m => new
+                var dtos = mascotas.Select(m => new // Lllama todas las relaciones de la mascota, raza y especie
                 {
                     m.Id,
                     m.Nombre,
