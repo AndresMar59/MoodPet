@@ -53,13 +53,13 @@ namespace MoodPet.Infraestructure.Percistencia.Repositorios
 
         public async Task<Mascota> FindAsync(int id)
         {
-            var entity = await _context.Set<Mascota>().FirstOrDefaultAsync(e => e.Id == id);
+            var entity = await _context.Set<Mascota>().FirstOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
             return entity;
         } // Devuelve una tarea segun el id de esta, si no existe devuelve null
 
         public async Task<Mascota> FindAsyncByUsuario(string id)
         {
-            var entity = await _context.Set<Mascota>().FirstOrDefaultAsync(e => e.UserId == id);
+            var entity = await _context.Set<Mascota>().FirstOrDefaultAsync(e => e.UserId == id && !e.IsDeleted);
             return entity;
         } // Devuelve una tarea segun el id de la mascota, si no existe devuelve null
 

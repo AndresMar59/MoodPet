@@ -8,7 +8,7 @@ namespace MoodPet.Domain.Interfaces.Repositorio
     public interface IEventoCalendarioRepository : IGeneralRepository<EventoCalendario>
     {
         // 1. Crear un evento
-        Task<EventoCalendario> CreateAsync(EventoCalendario evento);
+        Task<EventoCalendario> CreateEventoAsync(EventoCalendario evento);
 
         // 2. Buscar por ID del Evento
         Task<EventoCalendario?> GetByIdAsync(int id);

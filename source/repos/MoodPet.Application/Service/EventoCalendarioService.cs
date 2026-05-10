@@ -23,14 +23,14 @@ namespace MoodPet.Application.Service
             var mascota = await _mascotaRepository.FindAsync(evento.MascotaId);
 
             // Validaciones
-            if (mascota.UserId != evento.UserId)
-            {
-                throw new ArgumentException("El usuario no es el dueño de la mascota");
-            }
-
             if (mascota == null)
             {
                 throw new ArgumentException($"No se encontró la mascota con el id {evento.MascotaId}");
+            }
+
+            if (mascota.UserId != evento.UserId)
+            {
+                throw new ArgumentException("El usuario no es el dueño de la mascota");
             }
 
             var tipo = await _tipoEventoRepository.FindAsync(evento.TipoEventoId);
@@ -47,7 +47,7 @@ namespace MoodPet.Application.Service
 
             if (evento.FechaEvento < DateOnly.FromDateTime(DateTime.Now))
             {
-                throw new ArgumentException("La fecha del evento no puede ser en el pasado");
+                throw new ArgumentException("La fecha del evento no puede ser pasada");
             }
 
             if (string.IsNullOrWhiteSpace(evento.titulo))
@@ -56,7 +56,7 @@ namespace MoodPet.Application.Service
             }
 
             //Creando el evento
-            var createdEvento = await _eventoCalendarioRepository.CreateAsync(evento);
+            var createdEvento = await _eventoCalendarioRepository.CreateEventoAsync(evento);
 
             return $"Creación del evento con id {createdEvento.Id} completada";
         }
@@ -118,14 +118,17 @@ namespace MoodPet.Application.Service
                 throw new ArgumentException($"No se encontró el evento con el id {evento.Id}");
             }
 
-            existingEvento.titulo = evento.titulo;
             existingEvento.Descripcion = evento.Descripcion;
             if (evento.FechaEvento < DateOnly.FromDateTime(DateTime.Now))
             {
                 throw new ArgumentException("La fecha del evento no puede ser en el pasado");
             }
             existingEvento.FechaEvento = evento.FechaEvento;
-            existingEvento.MascotaId = evento.MascotaId;
+            existingEvento.TipoEventoId = evento.TipoEventoId;
+            if (evento.FechaEvento > DateOnly.FromDateTime(DateTime.Now) && evento.Estado == EventoCalendario.EstadoEvento.Completado)
+            {
+                throw new ArgumentException("No se puede marcar este evento como completado todavía");
+            }
             existingEvento.Estado = evento.Estado;
 
             await _eventoCalendarioRepository.UpdateAsync(existingEvento);
@@ -148,11 +151,25 @@ namespace MoodPet.Application.Service
             }
 
             evento.Estado = EventoCalendario.EstadoEvento.Completado;
+
             await _eventoCalendarioRepository.UpdateAsync(evento);
 
             return $"El evento con id {id} ha sido marcado como completado";
         }
 
+        public async Task<string> MarkEventoAsCancelled(int id)
+        {
+            var evento = await _eventoCalendarioRepository.GetByIdAsync(id);
 
+            if (evento == null)
+            {
+                throw new ArgumentException($"No se encontró el evento con el id {id}");
+            }
+            evento.Estado = EventoCalendario.EstadoEvento.Cancelado;
+
+            await _eventoCalendarioRepository.Delete(evento.Id);
+
+            return $"El evento con id {id} ha sido marcado como cancelado";
+        }
     }
 }

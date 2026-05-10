@@ -14,7 +14,7 @@ public class EventoCalendarioRepository : GeneralRepository<EventoCalendario>, I
     {
     }
 
-    public async Task<EventoCalendario> CreateAsync(EventoCalendario evento)
+    public async Task<EventoCalendario> CreateEventoAsync(EventoCalendario evento)
     {
         await _context.EventosCalendario.AddAsync(evento);
         await _context.SaveChangesAsync();
@@ -25,21 +25,26 @@ public class EventoCalendarioRepository : GeneralRepository<EventoCalendario>, I
     {
         return await _context.EventosCalendario
             .Include(e => e.Mascota)
-            .FirstOrDefaultAsync(e => e.Id == id);
+            .Include(e => e.TipoEvento)
+            .FirstOrDefaultAsync(e => e.Id == id && !e.IsDeleted);
     }
 
     public async Task<IEnumerable<EventoCalendario>> GetByMascotaIdAsync(int mascotaId)
     {
         return await _context.EventosCalendario
-            .Where(e => e.MascotaId == mascotaId)
-            .OrderBy(e => e.FechaEvento) 
+            .Where(e => e.MascotaId == mascotaId && !e.IsDeleted)
+            .Include(e => e.Mascota)
+            .Include(e => e.TipoEvento)
+            .OrderBy(e => e.FechaEvento)
             .ToListAsync();
     }
 
     public async Task<IEnumerable<EventoCalendario>> GetByUserIdAsync(string userId)
     {
         return await _context.EventosCalendario
-            .Where(e => e.UserId == userId)
+            .Where(e => e.UserId == userId && !e.IsDeleted)
+            .Include(e => e.Mascota)
+            .Include(e => e.TipoEvento)
             .OrderBy(e => e.FechaEvento)
             .ToListAsync();
     }
