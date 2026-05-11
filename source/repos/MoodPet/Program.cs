@@ -40,14 +40,17 @@ builder.Services.AddScoped<IRazaRepository, RazaRepository>();
 builder.Services.AddScoped<ITipoEventoRepository, TipoEventoRepository>();
 builder.Services.AddScoped<IMascotaRepository, MascotaRepsitory>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ITareaRepository, TareaRepository>();
+builder.Services.AddScoped<IHistorialRepository, HistorialTareaRepository>();
+
 builder.Services.AddScoped<Auth>();
 builder.Services.AddScoped<AdminService>();
 builder.Services.AddScoped<EventoCalendarioService>();
 builder.Services.AddScoped<EspecieService>();
 builder.Services.AddScoped<RazaService>();
 builder.Services.AddScoped<TipoEventoService>();
+builder.Services.AddScoped<TareaService>();
 builder.Services.AddScoped<MascotaService>();
-builder.Services.AddScoped<IMascotaRepository, MascotaRepsitory>();
 //builder.Services.AddScoped<>();
 //builder.Services.AddScoped<>();
 //builder.Services.AddScoped<>();

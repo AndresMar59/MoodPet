@@ -69,6 +69,7 @@ namespace MoodPet.Infraestructure.Percistencia.Repositorios
         public async Task<List<string>> GetUserRoles(string email)
         {
             var user = await _IdentityUser.FindByEmailAsync(email);
+            if(user == null) return new List<string>();
             var roles = await _IdentityUser.GetRolesAsync(user);
             return roles.ToList();
         }

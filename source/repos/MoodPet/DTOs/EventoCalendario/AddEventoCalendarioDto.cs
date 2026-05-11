@@ -4,7 +4,7 @@ namespace MoodPetApi.DTOs.EventoCalendario
 {
     public class AddEventoCalendarioDto
     {
-        public string titulo {  get; set; }
+        public string Titulo {  get; set; }
 
         public string? Descripcion { get; set; }
 

@@ -42,13 +42,14 @@ namespace MoodPet.Application.Service
             var estado = tarea.Recurrente;
             if (estado == true)
             {
+                var tarea1 = await _tarea.AddAsync(tarea);
                 var semnas = tarea.Semanas;
 
                 for (int i = 0; i < semnas; i++)
                 {
                     var historial = new HistorialTarea
                     {
-                        TareaId = tarea.Id,
+                        TareaId = tarea1.Id,
                         Fecha = tarea.Fecha.AddDays(i * 7),
                         Hora = tarea.Hora
                     };
@@ -56,19 +57,20 @@ namespace MoodPet.Application.Service
                     await _historial.AddAsync(historial);
                 }
 
-                await _tarea.AddAsync(tarea);
+                
                 return $"Creacion de la tarea con id {tarea.Id} completada";
             }
-
+            var tarea2 = await _tarea.AddAsync(tarea);
             var historial1 = new HistorialTarea
             {
-                TareaId = tarea.Id,
-                Fecha = tarea.Fecha,
-                Hora = tarea.Hora
+                TareaId = tarea2.Id,
+                Fecha = tarea2.Fecha,
+                Hora = tarea2.Hora
             };
 
+            
             await _historial.AddAsync(historial1);
-            await _tarea.AddAsync(tarea);
+
             return $"Creacion de la tarea con id {tarea.Id} completada";
         }
 
@@ -127,6 +129,9 @@ namespace MoodPet.Application.Service
             var completeTarea = await _historial.Complete(tarea.Id);
             return completeTarea;
         }
+
+
+       
 
         public async Task<bool> CompleteTareaByHistorial(int Id_Historial, int Id_Tarea)
         {

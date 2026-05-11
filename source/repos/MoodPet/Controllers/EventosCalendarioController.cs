@@ -13,13 +13,25 @@ namespace MoodPetApi.Controllers
     [Authorize]
     public class EventosCalendarioController : ControllerBase
     {
-        private readonly EventoCalendarioService _eventoCalendario;
-        public EventosCalendarioController(EventoCalendarioService eventoCalendarioService)
+         readonly EventoCalendarioService _eventoCalendario;
+         readonly TipoEventoService _tipoEvento;
+
+        public EventosCalendarioController(EventoCalendarioService eventoCalendarioService, TipoEventoService tipoEvento)
         {
             _eventoCalendario = eventoCalendarioService;
+            _tipoEvento = tipoEvento;
+
         }
 
-        [HttpPost]
+        [HttpGet("tipos-evento")]
+        public async Task<IActionResult> GetTiposEvento()
+        {
+            var tipos = await _tipoEvento.GetAllTipoEvento();
+            return Ok(tipos);
+        }
+
+
+        [HttpPost("creaEvento")]
         public async Task<IActionResult> CreateEventoCalendario(AddEventoCalendarioDto addEventoCalendarioDto)
         {
             if (!ModelState.IsValid)
@@ -41,7 +53,7 @@ namespace MoodPetApi.Controllers
                 {
                     CreaAt = DateTime.UtcNow,
                     IsDeleted = false,
-                    titulo = addEventoCalendarioDto.titulo,
+                    titulo = addEventoCalendarioDto.Titulo,
                     Descripcion = addEventoCalendarioDto.Descripcion,
                     FechaEvento = addEventoCalendarioDto.FechaEvento,
                     Estado = EventoCalendario.EstadoEvento.Pendiente,
@@ -58,6 +70,89 @@ namespace MoodPetApi.Controllers
                 return Conflict(new { message = ex.Message });
             }
         }
+
+        [HttpGet("eventos")]
+        public async Task<IActionResult> GetEventosByUserId()
+        {
+            var userId = this.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            try
+            {
+                var eventos = await _eventoCalendario.GetEventosByUserId(userId);
+                var dtoList = eventos.Select(evento => new
+                {
+                    evento.Id,
+                    evento.titulo,
+                    evento.Descripcion,
+                    evento.FechaEvento,
+                    evento.Estado,
+                    Mascota = new
+                    {
+                        evento.Mascota.Id,
+                        evento.Mascota.Nombre
+                    },
+                    TipoEvento = new
+                    {
+                        evento.TipoEvento.Id,
+                        evento.TipoEvento.Name
+                    }
+                });
+                return Ok(dtoList);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+
+        [HttpPatch("actualizarEvento/{EventoId:int}")]
+        public async Task<IActionResult> UpdateEventoCalendario(int EventoId, UpdateEventoCalendarioDto updateEventoCalendarioDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new { Message = "Datos insuficientes" });
+            }
+
+            try
+            {
+                var evento = await _eventoCalendario.GetByID(EventoId);
+
+                // Actualizar las propiedades del evento
+                if (updateEventoCalendarioDto.Descripcion != null)
+                    evento.Descripcion = updateEventoCalendarioDto.Descripcion;
+
+                if (updateEventoCalendarioDto.FechaEvento.HasValue)
+                    evento.FechaEvento = updateEventoCalendarioDto.FechaEvento.Value;
+
+                if (updateEventoCalendarioDto.Estado.HasValue)
+                    evento.Estado = updateEventoCalendarioDto.Estado.Value;
+
+                if (updateEventoCalendarioDto.TipoEventoId.HasValue)
+                    evento.TipoEventoId = updateEventoCalendarioDto.TipoEventoId.Value;
+
+                var result = await _eventoCalendario.UpdateEvento(evento);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
+        }
+
+        [HttpDelete("eliminarEvento/{EventoId:int}")]
+        public async Task<IActionResult> CancelarEventoCalendario(int EventoId)
+        {
+            try
+            {
+                var result = await _eventoCalendario.MarkEventoAsCancelled(EventoId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+
 
         [HttpGet("{EventoId:int}")]
         public async Task<IActionResult> GetEventoById(int EventoId)
@@ -94,86 +189,5 @@ namespace MoodPetApi.Controllers
             }
         }
 
-        [HttpGet("Usuario")]
-        public async Task<IActionResult> GetEventosByUserId()
-        {
-            var userId = this.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            try
-            {
-                var eventos = await _eventoCalendario.GetEventosByUserId(userId);
-                var dtoList = eventos.Select(evento => new
-                {
-                    evento.Id,
-                    evento.titulo,
-                    evento.Descripcion,
-                    evento.FechaEvento,
-                    evento.Estado,
-                    Mascota = new
-                    {
-                        evento.Mascota.Id,
-                        evento.Mascota.Nombre
-                    },
-                    TipoEvento = new
-                    {
-                        evento.TipoEvento.Id,
-                        evento.TipoEvento.Name
-                    }
-                });
-                return Ok(dtoList);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-        }
-
-        [HttpPatch("{EventoId:int}")]
-        public async Task<IActionResult> UpdateEventoCalendario(int EventoId, UpdateEventoCalendarioDto updateEventoCalendarioDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new { Message = "Datos insuficientes" });
-            }
-
-            try
-            {
-                var evento = await _eventoCalendario.GetByID(EventoId);
-
-                // Actualizar las propiedades del evento
-                if (updateEventoCalendarioDto.Descripcion != null)
-                    evento.Descripcion = updateEventoCalendarioDto.Descripcion;
-
-                if (updateEventoCalendarioDto.FechaEvento.HasValue)
-                    evento.FechaEvento = updateEventoCalendarioDto.FechaEvento.Value;
-
-                if (updateEventoCalendarioDto.Estado.HasValue)
-                    evento.Estado = updateEventoCalendarioDto.Estado.Value;
-
-                if (updateEventoCalendarioDto.TipoEventoId.HasValue)
-                    evento.TipoEventoId = updateEventoCalendarioDto.TipoEventoId.Value;
-
-                var result = await _eventoCalendario.UpdateEvento(evento);
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return Conflict(new { message = ex.Message });
-            }
-        }
-
-        [HttpDelete("{EventoId:int}")]
-        public async Task<IActionResult> CancelarEventoCalendario(int EventoId)
-        {
-            try
-            {
-                var result = await _eventoCalendario.MarkEventoAsCancelled(EventoId);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-        }
     }
 }

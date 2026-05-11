@@ -52,7 +52,7 @@ namespace MoodPet.Infraestructure.Percistencia.Repositorios
 
         public async Task<List<TareaDiaria>> GetAllAsyncbyMascota(int MascotId)
         {
-            var entity = await _context.Set<TareaDiaria>().Where(e => e.MascotaId == MascotId).ToListAsync();
+            var entity = await _context.Set<TareaDiaria>().Where(e => e.MascotaId == MascotId && e.estado == true).ToListAsync();
             return entity;
         }
     }

@@ -16,7 +16,7 @@ namespace MoodPet.Application.Service
 
         public async Task<IEnumerable<TipoEvento>> GetAllTipoEvento()
         {
-            return await _Tipo.GetAllAsync(); // Te devuelve una lista de objetos tipo especie (No se si es necesario pasarlo a string)
+            return await _Tipo.GetAllAsync(e => e.IsDeleted == false); // Te devuelve una lista de objetos tipo especie (No se si es necesario pasarlo a string)
         }
 
         public async Task<TipoEvento> GetByID(int id) // La validacion del tipo de entrada deberia ser en la terminal

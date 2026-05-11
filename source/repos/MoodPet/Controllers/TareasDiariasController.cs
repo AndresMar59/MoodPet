@@ -10,7 +10,7 @@ namespace MoodPetApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin,User")]
+    [Authorize]
     public class TareasDiariasController : Controller
     {
         private readonly TareaService _tareaService;
@@ -19,7 +19,7 @@ namespace MoodPetApi.Controllers
             _tareaService = tareaService;
         }
 
-        [HttpPost]
+        [HttpPost("crearTarea")]
         public async Task<IActionResult> AddTarea(TareaDTO tareaDto)
         {
             if (!ModelState.IsValid)
@@ -31,7 +31,7 @@ namespace MoodPetApi.Controllers
             {
                 var result = await _tareaService.CreateAsync(new TareaDiaria()
                 {
-                    Id = tareaDto.Id,
+                    
                     Titulo = tareaDto.Titulo,
                     Descripcion = tareaDto.Descripcion,
                     Fecha = tareaDto.Fecha,
@@ -40,9 +40,128 @@ namespace MoodPetApi.Controllers
                     Hora = tareaDto.Hora,
                     MascotaId = tareaDto.MascotaId
                 });
+                if(result.Contains("completada")) return Ok(result);
+                else return BadRequest(result);
+               
+            }
+            catch (Exception ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
+        }
+
+
+        //Devuelve todas las tareas por mascota
+        [HttpGet("AllTareasMascota/{Id:int}")]
+        public async Task<IActionResult> GetAllTareasByMascotas(int Id)
+        {
+
+            try
+            {
+                var Tarea = await _tareaService.GetAllbyMascot(Id);
+                return Ok(Tarea);
+            }
+
+
+            catch (Exception ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
+        }
+
+
+        [HttpDelete("toComplete/{Id:int}")]
+        public async Task<IActionResult> CompleteTarea(int Id)
+        {
+            try
+            {
+
+                var result = await _tareaService.deleteById(Id);
 
                 return Ok(result);
+
             }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        [HttpPatch("historial/{historialId:int}/tarea/{id:int}")]
+        public async Task<IActionResult> UpdateToComplete(int historialId, int id)
+        {
+            try
+            {
+                var complete = await _tareaService.CompleteTareaByHistorial(historialId, id);
+
+                return Ok(new { success = complete, message = "Estado actualizado correctamente" });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
+        }
+
+
+        
+
+        
+        
+        [HttpPatch("{id:int}/semana/{semana:int}")]
+        public async Task<IActionResult> CompletebySemana(int id, int semana)
+        {
+            try
+            {
+                var result = await _tareaService.CompleteTareaBySemana(semana, id);
+                return Ok(new { message = "Tarea actualizada", data = result });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, new { message = "Error interno", details = ex.Message });
+            }
+        }
+
+        
+        
+        
+        [HttpGet("Mascota/{Id:int}")]
+        public async Task<IActionResult> GetTareabyMascota(int Id)
+        {
+
+            try
+            {
+                var Tarea = await _tareaService.FindByMascota(Id);
+                return Ok(Tarea);
+            }
+
+
             catch (Exception ex)
             {
                 return Conflict(new { message = ex.Message });
@@ -68,46 +187,6 @@ namespace MoodPetApi.Controllers
         }
 
 
-
-
-        [HttpGet("Mascota/{Id:int}")]
-        public async Task<IActionResult> GetTareabyMascota(int Id)
-        {
-
-            try
-            {
-                var Tarea = await _tareaService.FindByMascota(Id);
-                return Ok(Tarea);
-            }
-
-
-            catch (Exception ex)
-            {
-                return Conflict(new { message = ex.Message });
-            }
-        }
-
-
-
-
-        [HttpGet("AllMascotas/{Id:int}")]
-        public async Task<IActionResult> GetAllTareasByMascotas(int Id)
-        {
-
-            try
-            {
-                var Tarea = await _tareaService.GetAllbyMascot(Id);
-                return Ok(Tarea);
-            }
-
-
-            catch (Exception ex)
-            {
-                return Conflict(new { message = ex.Message });
-            }
-        }
-
-
         [HttpGet("GetAllHistorial/{Id:int}")]
         public async Task<IActionResult> GetHistorialByTarea(int Id)
         {
@@ -119,63 +198,6 @@ namespace MoodPetApi.Controllers
             catch (Exception ex)
             {
                 return Conflict(new { message = ex.Message });
-            }
-        }
-
-
-        [HttpPatch("{id:int}/semana/{semana:int}")]
-        public async Task<IActionResult> CompletebySemana(int id, int semana)
-        {
-            try
-            {
-                var result = await _tareaService.CompleteTareaBySemana(semana, id);
-                return Ok(new { message = "Tarea actualizada", data = result });
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-
-                return StatusCode(500, new { message = "Error interno", details = ex.Message });
-            }
-        }
-
-        [HttpPatch("historial/{historialId:int}/tarea/{id:int}")]
-        public async Task<IActionResult> CompletebyId(int historialId, int id)
-        {
-            try
-            {
-                var complete = await _tareaService.CompleteTareaByHistorial(historialId, id);
-
-                return Ok(new { success = complete, message = "Estado actualizado correctamente" });
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return Conflict(new { message = ex.Message });
-            }
-        }
-
-
-        [HttpDelete("{Id:int}")]
-        public async Task<IActionResult> Delete(int Id)
-        {
-            try
-            {
-
-                var result = await _tareaService.deleteById(Id);
-
-                return Ok(result);
-
-            }
-            catch (Exception ex)
-            {
-                return NotFound(new { message = ex.Message });
             }
         }
 
