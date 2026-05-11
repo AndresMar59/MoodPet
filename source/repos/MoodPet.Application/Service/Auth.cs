@@ -65,6 +65,7 @@ namespace MoodPet.Application.Service
             if (result == false)
             {
                 var create = await _user.CreateUser(usuario);
+                if (create == null) return false;
                 return true;
             }
 

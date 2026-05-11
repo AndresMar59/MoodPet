@@ -19,7 +19,7 @@ namespace MoodPet.Infraestructure.Mapping
                 Lastname = usuario.LastName,
                 UserName = usuario.Email,
                 Email = usuario.Email,
-                PhoneNumber = usuario.Tel
+                PhoneNumber = usuario.Tel.ToString()
             };
         }
 
@@ -31,7 +31,7 @@ namespace MoodPet.Infraestructure.Mapping
             {
                 Id = Guid.Parse(identityUser.Id),
                 Email = identityUser.Email,
-                Tel = identityUser.PhoneNumber,
+                Tel = int.Parse(identityUser.PhoneNumber),
                 FirstName = identityUser.Firstname,
                 LastName = identityUser.Lastname
             };

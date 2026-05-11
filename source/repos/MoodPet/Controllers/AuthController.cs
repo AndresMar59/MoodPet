@@ -45,8 +45,9 @@ namespace MoodPetApi.Controllers
             );
 
             var role = await _authService.GetUserRole(loginDto.Email);
-            
 
+            if (result == null || result.Contains("invalidas")) return BadRequest();
+      
             return Ok(new { Token = result, Role = role});
         }
 

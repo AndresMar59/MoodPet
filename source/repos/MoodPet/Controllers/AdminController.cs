@@ -84,6 +84,8 @@ namespace MoodPetApi.Controllers
                 // Actualizando las propiedades de la raza
                 if (updateRazaDto.Name != null)
                     raza.Nombre = updateRazaDto.Name;
+                if (updateRazaDto.SpeciesId > 0)
+                    raza.EspecieId = updateRazaDto.SpeciesId;
 
                 // Guardando los cambios
                 await _adminService.UpdateRazaAsync(raza);

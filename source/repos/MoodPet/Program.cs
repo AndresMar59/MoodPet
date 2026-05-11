@@ -46,6 +46,7 @@ builder.Services.AddScoped<EventoCalendarioService>();
 builder.Services.AddScoped<EspecieService>();
 builder.Services.AddScoped<RazaService>();
 builder.Services.AddScoped<TipoEventoService>();
+builder.Services.AddScoped<MascotaService>();
 builder.Services.AddScoped<IMascotaRepository, MascotaRepsitory>();
 //builder.Services.AddScoped<>();
 //builder.Services.AddScoped<>();
@@ -103,35 +104,6 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-//Swagger
-builder.Services.AddEndpointsApiExplorer(); // Esto es vital
-builder.Services.AddSwaggerGen(c =>
-
-{
-    c.SwaggerDoc("v1", new OpenApiInfo
-        Title = "MoodPet Api",
-        Title = "MoodPet Api",
-        Version = "v1"
-
-    });
-
-    c.AddSecurityDefinition("bearer", new OpenApiSecurityScheme()
-    {
-        Description = "Jwt Authorization header using the Bearer Schema. Example: ",
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT",
-    });
-
-
-    c.AddSecurityRequirement(document => new OpenApiSecurityRequirement
-    {
-        [new OpenApiSecuritySchemeReference("bearer", document)] = []
-
-    });
-
-});
-
 
 var app = builder.Build();
 
@@ -141,8 +113,6 @@ app.UseCors("AllowFrontend");
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.UseSwagger();   
-    app.UseSwaggerUI(); 
 }
 
 app.UseHttpsRedirection();

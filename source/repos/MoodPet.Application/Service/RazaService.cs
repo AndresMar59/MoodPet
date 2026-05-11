@@ -10,9 +10,9 @@ namespace MoodPet.Application.Service
     public class RazaService
     {
         public readonly IEspecieRepository _especie;
-        public readonly RazaRepository _raza;
+        public readonly IRazaRepository _raza;
 
-        public RazaService(IEspecieRepository especie, RazaRepository raza)
+        public RazaService(IEspecieRepository especie, IRazaRepository raza)
         {
             _especie = especie;
             _raza = raza;
@@ -20,7 +20,7 @@ namespace MoodPet.Application.Service
 
         public async Task<IEnumerable<Raza>> GetAllRaza()
         {
-            return await _raza.GetAllAsync(); // Te devuelve una lista de objetos tipo raza (No se si es necesario pasarlo a string)
+            return await _raza.GetAllAsync(r => r.IsDeleted == false); // Te devuelve una lista de objetos tipo raza (No se si es necesario pasarlo a string)
         }
 
         public async Task<Raza> GetByID(int id) // La validacion del tipo de entrada deberia ser en la terminal
