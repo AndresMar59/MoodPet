@@ -37,7 +37,7 @@ namespace MoodPet.Infraestructure.Percistencia.Repositorios.General
         public async Task<List<Recomendacion>> GetPlantillasPorEspecie(int especieId)
         {
             return await _context.Recomendaciones
-                .Where(p => p.EspecieId == especieId && !p.IsDeleted)
+                .Where(p => p.EspecieId == especieId && !p.IsDeleted && p.RazaId==null)
                 .ToListAsync();
         }
 
