@@ -12,8 +12,8 @@ using MoodPet.Infraestructure.Percistencia;
 namespace MoodPet.Infraestructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260510224907_Inital")]
-    partial class Inital
+    [Migration("20260511203610_Recomendaciones")]
+    partial class Recomendaciones
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -227,6 +227,41 @@ namespace MoodPet.Infraestructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("EventosCalendario");
+                });
+
+            modelBuilder.Entity("MoodPet.Domain.Entities.HistorialRecomendaciones", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreaAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FechaGeneracion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MascotaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MascotaId");
+
+                    b.ToTable("HistorialRecomendaciones");
                 });
 
             modelBuilder.Entity("MoodPet.Domain.Entities.HistorialTarea", b =>
@@ -480,13 +515,20 @@ namespace MoodPet.Infraestructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Descripcion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("FechaGeneracion")
+                    b.Property<DateTime>("CreaAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MascotaId")
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("EspecieId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("RazaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Tipo")
@@ -495,7 +537,9 @@ namespace MoodPet.Infraestructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MascotaId");
+                    b.HasIndex("EspecieId");
+
+                    b.HasIndex("RazaId");
 
                     b.ToTable("Recomendaciones");
                 });
@@ -576,6 +620,17 @@ namespace MoodPet.Infraestructure.Migrations
                     b.Navigation("TipoEvento");
                 });
 
+            modelBuilder.Entity("MoodPet.Domain.Entities.HistorialRecomendaciones", b =>
+                {
+                    b.HasOne("MoodPet.Domain.Entities.Mascota", "Mascota")
+                        .WithMany()
+                        .HasForeignKey("MascotaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Mascota");
+                });
+
             modelBuilder.Entity("MoodPet.Domain.Entities.HistorialTarea", b =>
                 {
                     b.HasOne("MoodPet.Domain.Entities.TareaDiaria", "TareaDiaria")
@@ -632,13 +687,19 @@ namespace MoodPet.Infraestructure.Migrations
 
             modelBuilder.Entity("Moodpet.Domain.Entities.Recomendacion", b =>
                 {
-                    b.HasOne("MoodPet.Domain.Entities.Mascota", "Mascota")
+                    b.HasOne("MoodPet.Domain.Entities.Especie", "Especie")
                         .WithMany()
-                        .HasForeignKey("MascotaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EspecieId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Mascota");
+                    b.HasOne("MoodPet.Domain.Entities.Raza", "Raza")
+                        .WithMany()
+                        .HasForeignKey("RazaId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Especie");
+
+                    b.Navigation("Raza");
                 });
 
             modelBuilder.Entity("MoodPet.Domain.Entities.Especie", b =>

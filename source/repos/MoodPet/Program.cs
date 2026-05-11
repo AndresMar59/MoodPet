@@ -42,6 +42,7 @@ builder.Services.AddScoped<IMascotaRepository, MascotaRepsitory>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITareaRepository, TareaRepository>();
 builder.Services.AddScoped<IHistorialRepository, HistorialTareaRepository>();
+builder.Services.AddScoped<IRecomendacionRepository, RecomendacionesRepository>();
 
 builder.Services.AddScoped<Auth>();
 builder.Services.AddScoped<AdminService>();
@@ -51,6 +52,8 @@ builder.Services.AddScoped<RazaService>();
 builder.Services.AddScoped<TipoEventoService>();
 builder.Services.AddScoped<TareaService>();
 builder.Services.AddScoped<MascotaService>();
+builder.Services.AddScoped<RecomendacionService>();
+
 //builder.Services.AddScoped<>();
 //builder.Services.AddScoped<>();
 //builder.Services.AddScoped<>();

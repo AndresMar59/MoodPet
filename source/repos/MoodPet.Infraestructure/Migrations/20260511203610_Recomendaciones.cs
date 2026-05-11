@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MoodPet.Infraestructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Inital : Migration
+    public partial class Recomendaciones : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -243,6 +243,36 @@ namespace MoodPet.Infraestructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Recomendaciones",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Tipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RazaId = table.Column<int>(type: "int", nullable: true),
+                    EspecieId = table.Column<int>(type: "int", nullable: true),
+                    CreaAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Recomendaciones", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Recomendaciones_Especies_EspecieId",
+                        column: x => x.EspecieId,
+                        principalTable: "Especies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Recomendaciones_Razas_RazaId",
+                        column: x => x.RazaId,
+                        principalTable: "Razas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "EventosCalendario",
                 columns: table => new
                 {
@@ -281,21 +311,23 @@ namespace MoodPet.Infraestructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Recomendaciones",
+                name: "HistorialRecomendaciones",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MascotaId = table.Column<int>(type: "int", nullable: false),
                     Tipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FechaGeneracion = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaGeneracion = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreaAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Recomendaciones", x => x.Id);
+                    table.PrimaryKey("PK_HistorialRecomendaciones", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Recomendaciones_Mascotas_MascotaId",
+                        name: "FK_HistorialRecomendaciones_Mascotas_MascotaId",
                         column: x => x.MascotaId,
                         principalTable: "Mascotas",
                         principalColumn: "Id",
@@ -412,6 +444,11 @@ namespace MoodPet.Infraestructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_HistorialRecomendaciones_MascotaId",
+                table: "HistorialRecomendaciones",
+                column: "MascotaId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_HistorialTarea_TareaId",
                 table: "HistorialTarea",
                 column: "TareaId");
@@ -432,9 +469,14 @@ namespace MoodPet.Infraestructure.Migrations
                 column: "EspecieId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Recomendaciones_MascotaId",
+                name: "IX_Recomendaciones_EspecieId",
                 table: "Recomendaciones",
-                column: "MascotaId");
+                column: "EspecieId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Recomendaciones_RazaId",
+                table: "Recomendaciones",
+                column: "RazaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TareasDiarias_AppIdentityUserId",
@@ -467,6 +509,9 @@ namespace MoodPet.Infraestructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "EventosCalendario");
+
+            migrationBuilder.DropTable(
+                name: "HistorialRecomendaciones");
 
             migrationBuilder.DropTable(
                 name: "HistorialTarea");

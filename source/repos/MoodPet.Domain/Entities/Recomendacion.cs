@@ -5,20 +5,19 @@ using MoodPet.Domain.Entities;
 
 namespace Moodpet.Domain.Entities
 {
-    public class Recomendacion
+    public class Recomendacion:GeneralEntity
 
-    {  
-        public int Id { get; set; }
-
-        public int MascotaId { get; set; }
-
-        public Mascota Mascota { get; set; }
-
+    {
         public string Tipo { get; set; }
+        // Ejemplo: Alimentacion, Salud, Actividad, Higiene
 
-        public string? Descripcion { get; set; }
+        public string Descripcion { get; set; }
 
-        public DateTime FechaGeneracion { get; set; } = DateTime.Now;
+        public int? RazaId { get; set; }
+        public Raza? Raza { get; set; }
+
+        public int? EspecieId { get; set; }
+        public Especie? Especie { get; set; }
     }
     
     

@@ -31,6 +31,7 @@ namespace MoodPet.Infraestructure.Percistencia
         public DbSet<HistorialTarea> HistorialTarea { get; set; }
 
         public DbSet<Especie> Especies { get; set; }
+        public DbSet<HistorialRecomendaciones> HistorialRecomendaciones { get; set; }
 
 
         // 2. Configuramos las relaciones
@@ -97,14 +98,17 @@ namespace MoodPet.Infraestructure.Percistencia
             });
 
             // mascota 1 - N recomendacion
-            modelBuilder.Entity<Recomendacion>(entity =>
-            {
-                entity.HasKey(e => e.Id);
+            modelBuilder.Entity<Recomendacion>()
+                .HasOne(p => p.Raza)
+                .WithMany()
+                .HasForeignKey(p => p.RazaId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasOne(e => e.Mascota)
-                    .WithMany()
-                    .HasForeignKey(e => e.MascotaId);
-            });
+            modelBuilder.Entity<Recomendacion>()
+                .HasOne(p => p.Especie)
+                .WithMany()
+                .HasForeignKey(p => p.EspecieId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // mascota 1 - N tarea diaria
             modelBuilder.Entity<TareaDiaria>(entity =>
@@ -115,6 +119,13 @@ namespace MoodPet.Infraestructure.Percistencia
                     .WithMany(e => e.Tareas)
                     .HasForeignKey(e => e.MascotaId);
             });
+
+
+            modelBuilder.Entity<HistorialRecomendaciones>()
+                .HasOne(r => r.Mascota)
+                .WithMany()
+                .HasForeignKey(r => r.MascotaId)
+                .OnDelete(DeleteBehavior.Cascade);
 
 
         }
